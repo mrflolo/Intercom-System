@@ -11,29 +11,29 @@ German:
 English:
 
 1. CRITICAL-SYSTEM-ERROR
-2. Intercom is broadcasts
-3. Broadcast is starting
-4. Broadcast started
-5. Broadcast stopped
-6. Access denied!
-7. Outside the broadcast area!
+2. intercom transmits
+3. transmission is started
+4. transmission started
+5. transmission finished
+6. access authorization denied!
+7. out of range!
 
 Polish:
 
-1. 
-2. 
-3. 
-4. 
-5. 
-6. 
-7. 
+1. KRYTYCZNY-BŁĄD-SYSTEMU
+2. transmisje interkomowe
+3. transmisja zostaje uruchomiona
+4. transmisja rozpoczęta
+5. transmisja zakończona
+6. Odmówiono autoryzacji dostępu!
+7. poza zasięgiem!
 
 French: 
 
-1. 
-2. 
-3. 
-4. 
-5. 
-6. 
-7. 
+1. ERREUR-CRITIQUE-DU-SYSTÈME
+2. l'interphone transmet
+3. la transmission est lancée
+4. la transmission a commencé
+5. transmission terminée
+6. autorisation d'accès refusée !
+7. hors de portée !
