@@ -17,7 +17,7 @@ Just Subscribe to it on [Steam](https://steamcommunity.com/sharedfiles/filedetai
 > [Venuska1117](https://steamcommunity.com/id/Venuska1117/)
 
 ### French:
-> [Vincent Winchester](https://steamcommunity.com/id/vincent-winchester/), 
+> [Vincent Winchester](https://steamcommunity.com/id/vincent-winchester/)
 
 
 ## FAQ: 
