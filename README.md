@@ -8,16 +8,16 @@ Just Subscribe to it on [Steam](https://steamcommunity.com/sharedfiles/filedetai
 ## Translations: 
 
 ### English:
-> Me (mr_flolo)
+> [Me (mr_flolo)](https://steamcommunity.com/id/mrflolo/), [Venuska1117](https://steamcommunity.com/id/Venuska1117/)
 
 ### German: 
-> Me (mr_flolo) 
+> [Me (mr_flolo)](https://steamcommunity.com/id/mrflolo/)
 
 ### Polish:
-> Venuska1117
+> [Venuska1117](https://steamcommunity.com/id/Venuska1117/)
 
 ### French:
-> 
+> [Vincent Winchester](https://steamcommunity.com/id/vincent-winchester/), 
 
 
 ## FAQ: 
