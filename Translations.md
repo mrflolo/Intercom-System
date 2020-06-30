@@ -1,4 +1,4 @@
-German:
+**German:**
 
 1. KRITISCHER-SYSTEMFEHLER
 2. Intercom überträgt
@@ -8,7 +8,7 @@ German:
 6. Zugangsberechtigung verweigert!
 7. Außerhalb des Sendebereichs!
 
-English:
+**English:**
 
 1. CRITICAL-SYSTEM-ERROR
 2. intercom transmits
@@ -18,7 +18,7 @@ English:
 6. access authorization denied!
 7. out of range!
 
-Polish:
+**Polish:**
 
 1. KRYTYCZNY-BŁĄD-SYSTEMU
 2. transmisje interkomowe
@@ -28,7 +28,7 @@ Polish:
 6. Odmówiono autoryzacji dostępu!
 7. poza zasięgiem!
 
-French: 
+**French:**
 
 1. ERREUR-CRITIQUE-DU-SYSTÈME
 2. l'interphone transmet
