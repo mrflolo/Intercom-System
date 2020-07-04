@@ -12,18 +12,19 @@
 - [x] Intercom can only be used inside the zone(s). 
 - [x] Feedback on use when the person isn´t in the right job or the Intercom isn´t placed in the zone(s).
 - [x] Currently only available in a mix of German and English
+- [X] Multi-Language support for English, German, French and Polish
 
-**What's coming next:**
-- [ ] Multi-Language Support for English, German, French and Polish
-- [ ] Configurable Zones so the Addon can be used on every Map 
+**What's coming next:*
+- [ ] Configurable zones so the addon can be used on every map (WIP)
 
 **Requirements:**
 - Currently only works on [Site-10 Map](https://steamcommunity.com/sharedfiles/filedetails/?id=1931210390)
 - Needs [DarkRP](https://steamcommunity.com/sharedfiles/filedetails/?id=248302805) gamemode to work.
-- For better usergroup Management is [ULX](https://steamcommunity.com/sharedfiles/filedetails/?id=557962280) recommended.
+- For better usergroup management is [ULX](https://steamcommunity.com/sharedfiles/filedetails/?id=557962280) recommended.
 
 ## How to install it: 
-Just Subscribe to it on [Steam](https://steamcommunity.com/sharedfiles/filedetails/?id=2147062567) (Currently not published)
+Just subscribe to it on [Steam](https://steamcommunity.com/sharedfiles/filedetails/?id=2147062567) (Currently not published)
+Or download the latest version of the addon from here.
 
 ## Translations: 
 
@@ -42,9 +43,9 @@ Just Subscribe to it on [Steam](https://steamcommunity.com/sharedfiles/filedetai
 
 ## FAQ: 
 
-When did you start making this Addon? 
+When did you start making this addon? 
 > january 2020
 
-How long did you need for this Addon?
+How long did you need for this addon?
 > Im still working on it, so I dont know how long i will work on it.
 
