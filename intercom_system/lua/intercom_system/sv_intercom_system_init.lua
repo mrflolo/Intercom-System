@@ -25,10 +25,22 @@ local function table_exist()
       Msg( sql.LastError( result ) .. "\n" )
     end
   end
+
+  if sql.TableExists("sv_intercom_system_saved_language") then
+    Msg("sv_intercom_system_saved_language table exists! \n")
+  else
+    local query = "CREATE TABLE sv_intercom_system_saved_language ( lang varchar(255) )"
+    local result = sql.Query(query)
+    if sql.TableExists("sv_intercom_system_saved_language") then
+      Msg("Succes ! sv_intercom_system_saved_language table was created \n")
+    else
+      Msg("Error ! Something went wrong by creating the sv_intercom_system_saved_language table. \n")
+      Msg( sql.LastError( result ) .. "\n" )
+    end
+  end
 end
 
 local function Initialize()
-
   table_exist()
 end
 
@@ -37,7 +49,7 @@ hook.Add( "Initialize", "InitializeForIntercomDBCheck", Initialize )
 timer.Simple( 0, function()
   local function intercomvers()
 
-    print("Intercom v0.2-alpha")
+    print("Intercom Version 1.0")
 
   end
 

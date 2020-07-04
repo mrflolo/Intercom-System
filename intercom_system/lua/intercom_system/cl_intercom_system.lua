@@ -17,9 +17,9 @@ surface.CreateFont( "HudTextDefaultRevolte", {
 })
 
 --Coordinaten
-local pos_w = ScrW()/2.25
-local width = ScrW()/8
-local text_pos_w = ScrW()/2.23
+local pos_w = ScrW()/2.4
+local width = ScrW()/6.74
+local text_pos_w = ScrW()/2.38
 local text_pos_h = ScrH()/36
 local color1
 local color2
@@ -30,16 +30,13 @@ local text
 net.Receive( "intercom_overlay_p1",
 function()
 
-	surface.PlaySound( intercom_system_config.StartSound )
+	surface.PlaySound( "intercom.wav" )
 
 	color1 = Vector(150,150,20)
-	color2 = Vector(80, 80, 80)
-	text = " "
 
 	hook.Add("HUDPaint", "IntercomDrawInfoMessageHook", function()
 
-		draw.RoundedBox(14, pos_w, 0, width, 80, color1)
-		draw.DrawText(text, "HudTextDefaultRevolte", text_pos_w, text_pos_h, color2)
+		draw.RoundedBox(5, pos_w, 0, width, 80, color1)
 
 	end)
 
@@ -51,11 +48,11 @@ function()
 
 	color1 = Vector(120,200,120)
 	color2 = Vector(80, 80, 80)
-	text = intercom_system_config.txt2
+	text = net.ReadString()
 
 	hook.Add("HUDPaint", "IntercomDrawInfoMessageHook", function()
 
-		draw.RoundedBox(14, pos_w, 0, width, 80, color1)
+		draw.RoundedBox(5, pos_w, 0, width, 80, color1)
 		draw.DrawText(text, "HudTextDefaultRevolte", text_pos_w, text_pos_h, color2)
 
 	end)
@@ -66,16 +63,13 @@ function()
 
 	hook.Remove("HUDPaint", "IntercomDrawInfoMessageHook")
 
-	surface.PlaySound( intercom_system_config.EndSound )
+	surface.PlaySound( "alarm.wav" )
 
 	color1 = Vector(100,10,5)
-	color2 = Vector(200, 200, 200)
-	text = " "
 
 	hook.Add("HUDPaint", "IntercomDrawInfoMessageHook", function()
 
-		draw.RoundedBox(14, pos_w, 0, width, 80, color1)
-		draw.DrawText(text, "HudTextDefaultRevolte", text_pos_w, text_pos_h, color2)
+		draw.RoundedBox(5, pos_w, 0, width, 80, color1)
 
 	end)
 
@@ -93,39 +87,58 @@ net.Receive( "intercom_overlay_end",function()
 
 end)
 
-net.Receive( "intercom_overlay_p1_own",function()
-
-
-end)
-
 net.Receive( "intercom_overlay_p2_own",function()
 
-	chat.AddText( Color( 180, 20, 20 ), " !---------------------------------------------------------! " )
-	chat.AddText( Color( 120, 20, 20 ), "  [INTERCOM SYSTEM] ", Color( 50, 50, 50 ), intercom_system_config.txt5 )
-	chat.AddText( Color( 180, 20, 20 ), " !---------------------------------------------------------! " )
+	local intercom_txt1 = ""
+
+	intercom_txt1 = net.ReadString()
+
+	chat.AddText( Color( 180, 20, 20 ), " !--------------------------------------------------------------------! " )
+	chat.AddText( Color( 120, 20, 20 ), "  [INTERCOM SYSTEM] ", Color( 50, 50, 50 ), intercom_txt1 )
+	chat.AddText( Color( 180, 20, 20 ), " !--------------------------------------------------------------------! " )
 
 end)
 
 net.Receive( "intercom_overlay_p3_own",function()
 
-	chat.AddText( Color( 180, 20, 20 ), " !---------------------------------------------------------! " )
-	chat.AddText( Color( 120, 20, 20 ), "  [INTERCOM SYSTEM] ", Color( 50, 50, 50 ), intercom_system_config.txt6 )
-	chat.AddText( Color( 180, 20, 20 ), " !---------------------------------------------------------! " )
+	local intercom_txt2 = ""
+
+	intercom_txt2 = net.ReadString()
+
+	chat.AddText( Color( 180, 20, 20 ), " !--------------------------------------------------------------------! " )
+	chat.AddText( Color( 120, 20, 20 ), "  [INTERCOM SYSTEM] ", Color( 50, 50, 50 ), intercom_txt2 )
+	chat.AddText( Color( 180, 20, 20 ), " !--------------------------------------------------------------------! " )
 
 end)
 
 net.Receive("intercomfailed", function()
 
-		chat.AddText( Color( 180, 20, 20 ), " !---------------KRITISCHER-SYSTEMFEHLER---------------! " )
-		chat.AddText( Color( 120, 20, 20 ), "  [INTERCOM SYSTEM] ",  Color( 50, 50, 50 ), intercom_system_config.txt7 )
-		chat.AddText( Color( 180, 20, 20 ), " !---------------------------------------------------------------! " )
+	local intercom_tx3_table = net.ReadTable()
+	local intercom_txt3 = ""
+	local intercom__err_txt = ""
+
+	intercom_txt3 = intercom_tx3_table[1]
+	intercom__err_txt = intercom_tx3_table[2]
+
+
+
+	chat.AddText( Color( 180, 20, 20 ), " !---------------"..intercom__err_txt.."---------------! " )
+	chat.AddText( Color( 120, 20, 20 ), "  [INTERCOM SYSTEM] ",  Color( 50, 50, 50 ), intercom_txt3 )
+	chat.AddText( Color( 180, 20, 20 ), " !--------------------------------------------------------------------! " )
 
 end)
 
 net.Receive("intercomfailed2", function()
 
-		chat.AddText( Color( 180, 20, 20 ), " !-------------KRITISCHER-SYSTEMFEHLER-------------! " )
-		chat.AddText( Color( 120, 20, 20 ), "  [INTERCOM SYSTEM] ", Color( 50, 50, 50 ), intercom_system_config.txt8 )
-		chat.AddText( Color( 180, 20, 20 ), " !-----------------------------------------------------------! " )
+	local intercom_tx4_table = net.ReadTable()
+	local intercom_txt4 = ""
+	local intercom__err_txt = ""
+
+	intercom_txt4 = intercom_tx4_table[1]
+	intercom__err_txt = intercom_tx4_table[2]
+
+	chat.AddText( Color( 180, 20, 20 ), " !---------------"..intercom__err_txt.."---------------! " )
+	chat.AddText( Color( 120, 20, 20 ), "  [INTERCOM SYSTEM] ", Color( 50, 50, 50 ), intercom_txt4 )
+	chat.AddText( Color( 180, 20, 20 ), " !-------------------------------------------------------------------! " )
 
 end)

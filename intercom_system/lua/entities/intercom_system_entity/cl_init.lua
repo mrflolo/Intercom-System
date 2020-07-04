@@ -1,4 +1,3 @@
-include("intercom_system/sh_intercom_system_config.lua")
 include("shared.lua")
 
 surface.CreateFont( "TheDefaultSettings", {
