@@ -49,7 +49,7 @@ hook.Add( "Initialize", "InitializeForIntercomDBCheck", Initialize )
 timer.Simple( 0, function()
   local function intercomvers()
 
-    print("Intercom Version 1.0")
+    print("Intercom Version 0.2-Alpha")
 
   end
 
