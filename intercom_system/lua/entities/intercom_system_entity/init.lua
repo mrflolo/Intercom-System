@@ -25,17 +25,12 @@ end
 local IntercomIsPressedByUser = false
 local IntercomIsPressedUser = ""
 
---Funkton die Prüft ob die Personen die Durchsage hören soll /
---ob die Person die grade eine Durchsage macht redet und es weitergeleitet werden soll.
 function CheckIfYouCanHear( ply, validintercomplayers )
 
   local validintercomplayers2 = validintercomplayers
   local validintercomplayers3 = validintercomplayers
 
-    --Schalter zum ein / aus schalten von der hook etc.
     if intercomactivateswitch == false then
-
-        --Net Message zum öffnen des user overlays wird an die Personen in der "validintercomplayers2" list gesendet.
         for g, h in pairs(validintercomplayers2) do
           if h:IsPlayer() then
             net.Start("intercom_overlay_p1")
@@ -43,107 +38,42 @@ function CheckIfYouCanHear( ply, validintercomplayers )
           end
         end
 
-        --Timer in der die Sound  datei abgespielt wird.
         timer.Simple(2.3,function()
 
-          if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) > 0 then
-            if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) == 0 then
-            else
+          local intercom_selected_lang = sql.QueryValue("SELECT lang FROM sv_intercom_system_saved_language")
+
+          if intercom_selected_lang == "GER" then
               net.Start("intercom_overlay_p2_own")
               net.WriteString("Übertragung gestartet")
               net.Send(ply)
-            end
-          elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) > 0 then
-            if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) == 0 then
-            else
+          elseif intercom_selected_lang == "POL" then
               net.Start("intercom_overlay_p2_own")
               net.WriteString("transmisja rozpoczęta")
               net.Send(ply)
-            end
-          elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) > 0 then
-            if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) == 0 then
-            else
+          elseif intercom_selected_lang == "FR" then
               net.Start("intercom_overlay_p2_own")
               net.WriteString("la transmission a commencé")
               net.Send(ply)
-            end
-          elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) > 0 then
-            if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) == 0 then
-            else
-              net.Start("intercom_overlay_p2_own")
-              net.WriteString("transmission started")
-              net.Send(ply)
-            end
           else
             net.Start("intercom_overlay_p2_own")
             net.WriteString("transmission started")
             net.Send(ply)
           end
 
-          local InBoxPlayer2 = {}
-
-          table.Add( InBoxPlayer2, ents.FindInBox( Vector(8095.897461, -2623.414307, -851.979187), Vector(4570.666504, 1554.973877, 883.979797) ) )
-          table.Add( InBoxPlayer2, ents.FindInBox( Vector(1958.499268, -2882.740967, -866.897339), Vector(4570.666504, 1554.973877, 883.979797) ) )
-          table.Add( InBoxPlayer2, ents.FindInBox( Vector(1958.499268, -2882.740967, -866.897339), Vector(-155.749695, 1483.531128, 505.995087) ) )
-          table.Add( InBoxPlayer2, ents.FindInBox( Vector(-2458.412598, -2320.785645, -262.593933), Vector(-155.749695, 1483.531128, 505.995087) ) )
-          table.Add( InBoxPlayer2, ents.FindInBox( Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2459.576172, 1015.339722, 606.321045) ) )
-          table.Add( InBoxPlayer2, ents.FindInBox( Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2325.258057, 2867.767822, 625.538391) ) )
-          table.Add( InBoxPlayer2, ents.FindInBox( Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2325.258057, 2867.767822, 625.538391) ) )
-          table.Add( InBoxPlayer2, ents.FindInBox( Vector(4679.416992, 4760.559570, -620.735901), Vector(-2325.258057, 2867.767822, 625.538391) ) )
-          table.Add( InBoxPlayer2, ents.FindInBox( Vector(4679.416992, 4760.559570, -620.735901), Vector(-3481.643311, 6412.885742, 2247.709473) ) )
-          table.Add( InBoxPlayer2, ents.FindInBox( Vector(1429.870972, 8615.100586, -827.024231), Vector(-3481.643311, 6412.885742, 2247.709473) ) )
-
-          --Abfrage ob der Job freigegeben ist und falls das so ist eine Weiteleitung zur nächsten Funktion.
-
-          table.Empty( validintercomplayers3 )
-
-          for y, x in pairs(InBoxPlayer2) do
-            if table.IsEmpty(validintercomplayers2) then
-              if x:IsPlayer() then
-                table.insert( validintercomplayers3, x )
-              end
-            else
-              for f, g in pairs(validintercomplayers2) do
-                if x == g then
-                else
-                  if x:IsPlayer() then
-                    table.insert( validintercomplayers3, x )
-                  end
-                end
-              end
-            end
-          end
-
-          for o, p in pairs(validintercomplayers3) do
+          for o, p in pairs(validintercomplayers2) do
             if p:IsPlayer() then
-              if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) > 0 then
-                if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) == 0 then
-                else
-                  net.Start("intercom_overlay_p2")
-                  net.WriteString("Intercom überträgt")
-                  net.Send(p)
-                end
-              elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) > 0 then
-                if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) == 0 then
-                else
-                  net.Start("intercom_overlay_p2")
-                  net.WriteString("transmisje interkomowe")
-                  net.Send(p)
-                end
-              elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) > 0 then
-                if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) == 0 then
-                else
-                  net.Start("intercom_overlay_p2")
-                  net.WriteString("l'interphone transmet")
-                  net.Send(p)
-                end
-              elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) > 0 then
-                if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) == 0 then
-                else
-                  net.Start("intercom_overlay_p2")
-                  net.WriteString("intercom transmits")
-                  net.Send(p)
-                end
+              if intercom_selected_lang == "GER" then
+                net.Start("intercom_overlay_p2")
+                net.WriteString("Intercom überträgt")
+                net.Send(p)
+              elseif intercom_selected_lang == "POL" then
+                net.Start("intercom_overlay_p2")
+                net.WriteString("transmisje interkomowe")
+                net.Send(p)
+              elseif intercom_selected_lang == "FR" then
+                net.Start("intercom_overlay_p2")
+                net.WriteString("l'interphone transmet")
+                net.Send(p)
               else
                 net.Start("intercom_overlay_p2")
                 net.WriteString("intercom transmits")
@@ -152,22 +82,28 @@ function CheckIfYouCanHear( ply, validintercomplayers )
             end
           end
 
-          timer.Create( "CheckIfPlayerEntered", 2, 0,function()
+          timer.Create( "CheckIfPlayerEntered", 5, 0,function()
 
             local InBoxPlayer2 = {}
 
-            table.Add( InBoxPlayer2, ents.FindInBox( Vector(8095.897461, -2623.414307, -851.979187), Vector(4570.666504, 1554.973877, 883.979797) ) )
-            table.Add( InBoxPlayer2, ents.FindInBox( Vector(1958.499268, -2882.740967, -866.897339), Vector(4570.666504, 1554.973877, 883.979797) ) )
-            table.Add( InBoxPlayer2, ents.FindInBox( Vector(1958.499268, -2882.740967, -866.897339), Vector(-155.749695, 1483.531128, 505.995087) ) )
-            table.Add( InBoxPlayer2, ents.FindInBox( Vector(-2458.412598, -2320.785645, -262.593933), Vector(-155.749695, 1483.531128, 505.995087) ) )
-            table.Add( InBoxPlayer2, ents.FindInBox( Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2459.576172, 1015.339722, 606.321045) ) )
-            table.Add( InBoxPlayer2, ents.FindInBox( Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2325.258057, 2867.767822, 625.538391) ) )
-            table.Add( InBoxPlayer2, ents.FindInBox( Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2325.258057, 2867.767822, 625.538391) ) )
-            table.Add( InBoxPlayer2, ents.FindInBox( Vector(4679.416992, 4760.559570, -620.735901), Vector(-2325.258057, 2867.767822, 625.538391) ) )
-            table.Add( InBoxPlayer2, ents.FindInBox( Vector(4679.416992, 4760.559570, -620.735901), Vector(-3481.643311, 6412.885742, 2247.709473) ) )
-            table.Add( InBoxPlayer2, ents.FindInBox( Vector(1429.870972, 8615.100586, -827.024231), Vector(-3481.643311, 6412.885742, 2247.709473) ) )
+            local IntercomZoneCords = {
+              {Vector(8095.897461, -2623.414307, -851.979187), Vector(4570.666504, 1554.973877, 883.979797)},
+              {Vector(1958.499268, -2882.740967, -866.897339), Vector(4570.666504, 1554.973877, 883.979797)},
+              {Vector(1958.499268, -2882.740967, -866.897339), Vector(-155.749695, 1483.531128, 505.995087)},
+              {Vector(-2458.412598, -2320.785645, -262.593933), Vector(-155.749695, 1483.531128, 505.995087)},
+              {Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2459.576172, 1015.339722, 606.321045)},
+              {Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2325.258057, 2867.767822, 625.538391)},
+              {Vector(4679.416992, 4760.559570, -620.735901), Vector(-2325.258057, 2867.767822, 625.538391)},
+              {Vector(4679.416992, 4760.559570, -620.735901), Vector(-3481.643311, 6412.885742, 2247.709473)},
+              {Vector(1429.870972, 8615.100586, -827.024231), Vector(-3481.643311, 6412.885742, 2247.709473)}
+            }
 
-            --Abfrage ob der Job freigegeben ist und falls das so ist eine Weiteleitung zur nächsten Funktion.
+            for f, g in pairs(IntercomZoneCords) do
+              timer.Simple( 0.05,function()
+                table.Add( InBoxPlayer, ents.FindInBox( g[1], g[2] ) )
+              end)
+            end
+
 
             table.Empty( validintercomplayers3 )
 
@@ -188,36 +124,22 @@ function CheckIfYouCanHear( ply, validintercomplayers )
               end
             end
 
+            local intercom_selected_lang = sql.QueryValue("SELECT lang FROM sv_intercom_system_saved_language")
+
             for o, p in pairs(validintercomplayers3) do
               if p:IsPlayer() then
-                if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) > 0 then
-                  if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) == 0 then
-                  else
-                    net.Start("intercom_overlay_p2")
-                    net.WriteString("Intercom überträgt")
-                    net.Send(p)
-                  end
-                elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) > 0 then
-                  if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) == 0 then
-                  else
-                    net.Start("intercom_overlay_p2")
-                    net.WriteString("transmisje interkomowe")
-                    net.Send(p)
-                  end
-                elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) > 0 then
-                  if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) == 0 then
-                  else
-                    net.Start("intercom_overlay_p2")
-                    net.WriteString("l'interphone transmet")
-                    net.Send(p)
-                  end
-                elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) > 0 then
-                  if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) == 0 then
-                  else
-                    net.Start("intercom_overlay_p2")
-                    net.WriteString("intercom transmits")
-                    net.Send(p)
-                  end
+                if intercom_selected_lang == "GER" then
+                  net.Start("intercom_overlay_p2")
+                  net.WriteString("Intercom überträgt")
+                  net.Send(p)
+                elseif intercom_selected_lang == "POL" then
+                  net.Start("intercom_overlay_p2")
+                  net.WriteString("transmisje interkomowe")
+                  net.Send(p)
+                elseif intercom_selected_lang == "FR" then
+                  net.Start("intercom_overlay_p2")
+                  net.WriteString("l'interphone transmet")
+                  net.Send(p)
                 else
                   net.Start("intercom_overlay_p2")
                   net.WriteString("intercom transmits")
@@ -241,104 +163,60 @@ function CheckIfYouCanHear( ply, validintercomplayers )
                 net.Send(f)
               end
             end
-
             validintercomplayers2 = validintercomplayers3
-
           end)
 
-        --Hook zum abfragen ob grade eine Person redet und um die Namen der person die redet
-        --und der person der man es erlauben kann das sie es hört.
         hook.Add("PlayerCanHearPlayersVoice", "CheckIfYouCanHearHook", function(listener, talker)
 
-          --Es wird geprüft ob die Person die Redet die Person ist die Das Entity gedrückt hat ist.
             if talker == ply then
-
-                --Es wird geprüft ob die Person der man es erlauben kann das sie die Stimme der person die das Entity gedrückt hat hört
-                --in der "validintercomplayers2" list ist.
                 for t, z in pairs(validintercomplayers2) do
                   if z:IsPlayer() then
                     if z == listener then
-                    --Falls die person in der Liste ist wird ihr erlaubt die person die das Entity gedrückt hat zu hören.
                     return true
                     end
                   end
                 end
             end
         end)
-
-        --Schalter zum ein / aus schalten von der hook etc. wird geschaltet.
         intercomactivateswitch = true
-
       end)
 
     else
 
-      if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) > 0 then
-        if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) == 0 then
-        else
-          net.Start("intercom_overlay_p3_own")
-          net.WriteString("Übertragung beendet")
-          net.Send(ply)
-        end
-      elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) > 0 then
-        if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) == 0 then
-        else
-          net.Start("intercom_overlay_p3_own")
-          net.WriteString("transmisja zakończona")
-          net.Send(ply)
-        end
-      elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) > 0 then
-        if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) == 0 then
-        else
-          net.Start("intercom_overlay_p3_own")
-          net.WriteString("transmission terminée")
-          net.Send(ply)
-        end
-      elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) > 0 then
-        if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) == 0 then
-        else
-          net.Start("intercom_overlay_p3_own")
-          net.WriteString("transmission finished")
-          net.Send(ply)
-        end
+      local intercom_selected_lang = sql.QueryValue("SELECT lang FROM sv_intercom_system_saved_language")
+
+      if intercom_selected_lang == "GER" then
+        net.Start("intercom_overlay_p3_own")
+        net.WriteString("Übertragung beendet")
+        net.Send(ply)
+      elseif intercom_selected_lang == "POL" then
+        net.Start("intercom_overlay_p3_own")
+        net.WriteString("transmisja zakończona")
+        net.Send(ply)
+      elseif intercom_selected_lang == "FR" then
+        net.Start("intercom_overlay_p3_own")
+        net.WriteString("transmission terminée")
+        net.Send(ply)
       else
         net.Start("intercom_overlay_p3_own")
         net.WriteString("transmission finished")
         net.Send(ply)
       end
 
-        --Net Message zum öffnen des nächsten user overlays und beenden des Intercom Systems wird an die Personen in der
-        --"validintercomplayers2" list gesendet.
         for o, p in pairs(validintercomplayers2) do
           if p:IsPlayer() then
-            if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) > 0 then
-              if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) == 0 then
-              else
-                net.Start("intercom_overlay_p3")
-                net.WriteString("Übertragung beendet")
-                net.Send(p)
-              end
-            elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) > 0 then
-              if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) == 0 then
-              else
-                net.Start("intercom_overlay_p3")
-                net.WriteString("transmisja zakończona")
-                net.Send(p)
-              end
-            elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) > 0 then
-              if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) == 0 then
-              else
-                net.Start("intercom_overlay_p3")
-                net.WriteString("transmission terminée")
-                net.Send(p)
-              end
-            elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) > 0 then
-              if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) == 0 then
-              else
-                net.Start("intercom_overlay_p3")
-                net.WriteString("transmission finished")
-                net.Send(p)
-              end
+            if intercom_selected_lang == "GER" then
+              net.Start("intercom_overlay_p3")
+              net.WriteString("Übertragung beendet")
+              net.Send(p)
+            elseif intercom_selected_lang == "POL" then
+              net.Start("intercom_overlay_p3")
+              net.WriteString("transmisja zakończona")
+              net.Send(p)
+            elseif intercom_selected_lang == "FR" then
+              net.Start("intercom_overlay_p3")
+              net.WriteString("transmission terminée")
+              net.Send(p)
             else
               net.Start("intercom_overlay_p3")
               net.WriteString("transmission finished")
@@ -349,7 +227,6 @@ function CheckIfYouCanHear( ply, validintercomplayers )
 
         table.Empty(validintercomplayers2)
 
-        --Hook zum abfragen wird entfernt
         hook.Remove( "PlayerCanHearPlayersVoice", "CheckIfYouCanHearHook" )
         hook.Remove( "PlayerDeath", "CheckIfIntercomActivatedPlayerDied" )
         hook.Remove( "PlayerDisconnected", "CheckIfIntercomActivatedPlayerLeft" )
@@ -359,16 +236,11 @@ function CheckIfYouCanHear( ply, validintercomplayers )
         IntercomIsPressedByUser = false
         IntercomIsPressedUser = ""
 
-        --Schalter zum ein / aus schalten von der hook etc. wird geschaltet.
         intercomactivateswitch = false
     end
 end
 
---Funktion die Prüft ob die Person die auf das  Entity drückt in einem bestimmten Job ist.
-
 function CheckIfJob(ply)
-
-  --Configuration aller jobs die die Durchsagen machen können sollen.
 
     logcount = sql.QueryValue("SELECT COUNT(name) FROM sv_intercom_system_saved_teams")
 
@@ -386,18 +258,21 @@ function CheckIfJob(ply)
 
     local InBoxPlayer = {}
 
-    table.Add( InBoxPlayer, ents.FindInBox( Vector(8095.897461, -2623.414307, -851.979187), Vector(4570.666504, 1554.973877, 883.979797) ) )
-    table.Add( InBoxPlayer, ents.FindInBox( Vector(1958.499268, -2882.740967, -866.897339), Vector(4570.666504, 1554.973877, 883.979797) ) )
-    table.Add( InBoxPlayer, ents.FindInBox( Vector(1958.499268, -2882.740967, -866.897339), Vector(-155.749695, 1483.531128, 505.995087) ) )
-    table.Add( InBoxPlayer, ents.FindInBox( Vector(-2458.412598, -2320.785645, -262.593933), Vector(-155.749695, 1483.531128, 505.995087) ) )
-    table.Add( InBoxPlayer, ents.FindInBox( Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2459.576172, 1015.339722, 606.321045) ) )
-    table.Add( InBoxPlayer, ents.FindInBox( Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2325.258057, 2867.767822, 625.538391) ) )
-    table.Add( InBoxPlayer, ents.FindInBox( Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2325.258057, 2867.767822, 625.538391) ) )
-    table.Add( InBoxPlayer, ents.FindInBox( Vector(4679.416992, 4760.559570, -620.735901), Vector(-2325.258057, 2867.767822, 625.538391) ) )
-    table.Add( InBoxPlayer, ents.FindInBox( Vector(4679.416992, 4760.559570, -620.735901), Vector(-3481.643311, 6412.885742, 2247.709473) ) )
-    table.Add( InBoxPlayer, ents.FindInBox( Vector(1429.870972, 8615.100586, -827.024231), Vector(-3481.643311, 6412.885742, 2247.709473) ) )
+    local IntercomZoneCords = {
+      {Vector(8095.897461, -2623.414307, -851.979187), Vector(4570.666504, 1554.973877, 883.979797)},
+      {Vector(1958.499268, -2882.740967, -866.897339), Vector(4570.666504, 1554.973877, 883.979797)},
+      {Vector(1958.499268, -2882.740967, -866.897339), Vector(-155.749695, 1483.531128, 505.995087)},
+      {Vector(-2458.412598, -2320.785645, -262.593933), Vector(-155.749695, 1483.531128, 505.995087)},
+      {Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2459.576172, 1015.339722, 606.321045)},
+      {Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2325.258057, 2867.767822, 625.538391)},
+      {Vector(4679.416992, 4760.559570, -620.735901), Vector(-2325.258057, 2867.767822, 625.538391)},
+      {Vector(4679.416992, 4760.559570, -620.735901), Vector(-3481.643311, 6412.885742, 2247.709473)},
+      {Vector(1429.870972, 8615.100586, -827.024231), Vector(-3481.643311, 6412.885742, 2247.709473)}
+    }
 
-    --Abfrage ob der Job freigegeben ist und falls das so ist eine Weiteleitung zur nächsten Funktion.
+    for f, g in pairs(IntercomZoneCords) do
+        table.Add( InBoxPlayer, ents.FindInBox( g[1], g[2] ) )
+    end
 
     table.Empty( validintercomplayers )
 
@@ -431,58 +306,39 @@ function CheckIfJob(ply)
     end
 
     if counter == 0 then
-      if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) > 0 then
-        if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) == 0 then
-        else
 
-          local intercom_lang_table = {
-            "Zugangsberechtigung verweigert!",
-            "KRITISCHER-SYSTEMFEHLER"
-          }
+      local intercom_selected_lang = sql.QueryValue("SELECT lang FROM sv_intercom_system_saved_language")
 
-          net.Start("intercomfailed")
-          net.WriteTable(intercom_lang_table)
-          net.Send( ply )
-        end
-      elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) > 0 then
-        if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) == 0 then
-        else
+      if intercom_selected_lang == "GER" then
 
-          local intercom_lang_table = {
-            "Odmówiono autoryzacji dostępu!",
-            "KRYTYCZNY-BŁĄD-SYSTEMU"
-          }
+        local intercom_lang_table = {
+          "Zugangsberechtigung verweigert!",
+          "KRITISCHER-SYSTEMFEHLER"
+        }
 
-          net.Start("intercomfailed")
-          net.WriteTable(intercom_lang_table)
-          net.Send( ply )
-        end
-      elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) > 0 then
-        if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) == 0 then
-        else
+        net.Start("intercomfailed")
+        net.WriteTable(intercom_lang_table)
+        net.Send( ply )
+      elseif intercom_selected_lang == "POL" then
 
-          local intercom_lang_table = {
-            "autorisation d'accès refusée !",
-            "ERREUR-CRITIQUE-DU-SYSTÈME"
-          }
+        local intercom_lang_table = {
+          "Odmówiono autoryzacji dostępu!",
+          "KRYTYCZNY-BŁĄD-SYSTEMU"
+        }
 
-          net.Start("intercomfailed")
-          net.WriteTable(intercom_lang_table)
-          net.Send( ply )
-        end
-      elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) > 0 then
-        if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) == 0 then
-        else
+        net.Start("intercomfailed")
+        net.WriteTable(intercom_lang_table)
+        net.Send( ply )
+      elseif intercom_selected_lang == "FR" then
 
-          local intercom_lang_table = {
-            "access authorization denied!",
-            "CRITICAL-SYSTEM-ERROR"
-          }
+        local intercom_lang_table = {
+          "autorisation d'accès refusée !",
+          "ERREUR-CRITIQUE-DU-SYSTÈME"
+        }
 
-          net.Start("intercomfailed")
-          net.WriteTable(intercom_lang_table)
-          net.Send( ply )
-        end
+        net.Start("intercomfailed")
+        net.WriteTable(intercom_lang_table)
+        net.Send( ply )
       else
 
         local intercom_lang_table = {
@@ -495,58 +351,39 @@ function CheckIfJob(ply)
         net.Send( ply )
       end
     elseif counter == 1 then
-      if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) > 0 then
-        if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='GER'"), 10) == 0 then
-        else
 
-          local intercom_lang_table = {
-            "Außerhalb des Sendebereichs",
-            "KRITISCHER-SYSTEMFEHLER"
-          }
+      local intercom_selected_lang = sql.QueryValue("SELECT lang FROM sv_intercom_system_saved_language")
 
-          net.Start("intercomfailed2")
-          net.WriteTable(intercom_lang_table)
-          net.Send( ply )
-        end
-      elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) > 0 then
-        if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='POL'"), 10) == 0 then
-        else
+      if intercom_selected_lang == "GER" then
 
-          local intercom_lang_table = {
-            "poza zasięgiem!",
-            "KRYTYCZNY-BŁĄD-SYSTEMU"
-          }
+        local intercom_lang_table = {
+          "Außerhalb des Sendebereichs",
+          "KRITISCHER-SYSTEMFEHLER"
+        }
 
-          net.Start("intercomfailed2")
-          net.WriteTable(intercom_lang_table)
-          net.Send( ply )
-        end
-      elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) > 0 then
-        if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='FR'"), 10) == 0 then
-        else
+        net.Start("intercomfailed2")
+        net.WriteTable(intercom_lang_table)
+        net.Send( ply )
+      elseif intercom_selected_lang == "POL" then
 
-          local intercom_lang_table = {
-            "hors de portée !",
-            "ERREUR-CRITIQUE-DU-SYSTÈME"
-          }
+        local intercom_lang_table = {
+          "poza zasięgiem!",
+          "KRYTYCZNY-BŁĄD-SYSTEMU"
+        }
 
-          net.Start("intercomfailed2")
-          net.WriteTable(intercom_lang_table)
-          net.Send( ply )
-        end
-      elseif tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) > 0 then
-        if tonumber(sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language WHERE lang='ENG'"), 10) == 0 then
-        else
+        net.Start("intercomfailed2")
+        net.WriteTable(intercom_lang_table)
+        net.Send( ply )
+      elseif intercom_selected_lang == "FR" then
 
-          local intercom_lang_table = {
-            "out of range!",
-            "CRITICAL-SYSTEM-ERROR"
-          }
+        local intercom_lang_table = {
+          "hors de portée !",
+          "ERREUR-CRITIQUE-DU-SYSTÈME"
+        }
 
-          net.Start("intercomfailed2")
-          net.WriteTable(intercom_lang_table)
-          net.Send( ply )
-        end
+        net.Start("intercomfailed2")
+        net.WriteTable(intercom_lang_table)
+        net.Send( ply )
       else
 
         local intercom_lang_table = {
@@ -568,8 +405,6 @@ function CheckIfJob(ply)
 
           if cply1 == ply then
             for o, p in pairs(player.GetAll()) do
-                net.Start("intercom_overlay_p3")
-                net.Send(p)
                 net.Start("intercom_overlay_end")
                 net.Send(p)
             end
@@ -588,8 +423,6 @@ function CheckIfJob(ply)
 
           if cply2 == ply then
             for o, p in pairs(player.GetAll()) do
-                net.Start("intercom_overlay_p3")
-                net.Send(p)
                 net.Start("intercom_overlay_end")
                 net.Send(p)
             end
@@ -608,8 +441,6 @@ function CheckIfJob(ply)
 
           if cply3 == ply then
             for o, p in pairs(player.GetAll()) do
-                net.Start("intercom_overlay_p3")
-                net.Send(p)
                 net.Start("intercom_overlay_end")
                 net.Send(p)
             end
@@ -622,7 +453,6 @@ function CheckIfJob(ply)
             IntercomIsPressedByUser = false
             IntercomIsPressedUser = ""
           end
-
         end)
         IntercomIsPressedByUser = true
         IntercomIsPressedUser = ply
@@ -642,7 +472,6 @@ function ENT:Use(act, call)
         if ply == IntercomIsPressedUser then
           CheckIfJob(ply)
         else
-
         end
       else
         CheckIfJob(ply)

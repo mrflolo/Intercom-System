@@ -5,8 +5,6 @@ print("|           Created by mr_flolo           |")
 print("-------------------------------------------")
 print(" ")
 
--- game.MaxPlayers()
-
 if SERVER then
   include("intercom_system/sv_intercom_system_init.lua")
 

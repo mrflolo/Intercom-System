@@ -40,16 +40,14 @@ local function table_exist()
   end
 end
 
-local function Initialize()
+timer.Simple( 0.1,function()
   table_exist()
-end
+end)
 
-hook.Add( "Initialize", "InitializeForIntercomDBCheck", Initialize )
-
-timer.Simple( 0, function()
+timer.Simple( 0.1, function()
   local function intercomvers()
 
-    print("Intercom Version 0.2-Alpha")
+    print("Intercom Version 1.0")
 
   end
 

@@ -16,7 +16,6 @@ surface.CreateFont( "HudTextDefaultRevolte", {
 	outline = false,
 })
 
---Coordinaten
 local pos_w = ScrW()/2.4
 local width = ScrW()/6.74
 local text_pos_w = ScrW()/2.38
@@ -24,8 +23,6 @@ local text_pos_h = ScrH()/36
 local color1
 local color2
 local text
-
---Verschiedene Stadien des User Overlays
 
 net.Receive( "intercom_overlay_p1",
 function()
