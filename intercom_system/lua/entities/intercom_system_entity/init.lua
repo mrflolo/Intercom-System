@@ -25,7 +25,7 @@ end
 local IntercomIsPressedByUser = false
 local IntercomIsPressedUser = ""
 
-function CheckIfYouCanHear( ply, validintercomplayers )
+function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
 
   local validintercomplayers2 = validintercomplayers
   local validintercomplayers3 = validintercomplayers
@@ -39,8 +39,6 @@ function CheckIfYouCanHear( ply, validintercomplayers )
         end
 
         timer.Simple(2.3,function()
-
-          local intercom_selected_lang = sql.QueryValue("SELECT lang FROM sv_intercom_system_saved_language")
 
           if intercom_selected_lang == "GER" then
               net.Start("intercom_overlay_p2_own")
@@ -99,9 +97,7 @@ function CheckIfYouCanHear( ply, validintercomplayers )
             }
 
             for f, g in pairs(IntercomZoneCords) do
-              timer.Simple( 0.05,function()
-                table.Add( InBoxPlayer, ents.FindInBox( g[1], g[2] ) )
-              end)
+              table.Add( InBoxPlayer, ents.FindInBox( g[1], g[2] ) )
             end
 
 
@@ -123,8 +119,6 @@ function CheckIfYouCanHear( ply, validintercomplayers )
                 end
               end
             end
-
-            local intercom_selected_lang = sql.QueryValue("SELECT lang FROM sv_intercom_system_saved_language")
 
             for o, p in pairs(validintercomplayers3) do
               if p:IsPlayer() then
@@ -183,8 +177,6 @@ function CheckIfYouCanHear( ply, validintercomplayers )
 
     else
 
-      local intercom_selected_lang = sql.QueryValue("SELECT lang FROM sv_intercom_system_saved_language")
-
       if intercom_selected_lang == "GER" then
         net.Start("intercom_overlay_p3_own")
         net.WriteString("Übertragung beendet")
@@ -242,223 +234,221 @@ end
 
 function CheckIfJob(ply)
 
-    logcount = sql.QueryValue("SELECT COUNT(name) FROM sv_intercom_system_saved_teams")
+  local intercom_selected_lang = sql.QueryValue("SELECT lang FROM sv_intercom_system_saved_language")
 
-    local b2 = tonumber( logcount, 10 )
+  logcount = sql.QueryValue("SELECT COUNT(name) FROM sv_intercom_system_saved_teams")
 
-    local check_jobs_1 = {}
+  local b2 = tonumber( logcount, 10 )
 
-    for o=1, b2 do
+  local check_jobs_1 = {}
 
-    	table.insert( check_jobs_1, sql.QueryRow("SELECT name FROM sv_intercom_system_saved_teams", o ))
+  for o=1, b2 do
 
-    end
+  	table.insert( check_jobs_1, sql.QueryRow("SELECT name FROM sv_intercom_system_saved_teams", o ))
 
-    local validintercomplayers = {}
+  end
 
-    local InBoxPlayer = {}
+  local validintercomplayers = {}
 
-    local IntercomZoneCords = {
-      {Vector(8095.897461, -2623.414307, -851.979187), Vector(4570.666504, 1554.973877, 883.979797)},
-      {Vector(1958.499268, -2882.740967, -866.897339), Vector(4570.666504, 1554.973877, 883.979797)},
-      {Vector(1958.499268, -2882.740967, -866.897339), Vector(-155.749695, 1483.531128, 505.995087)},
-      {Vector(-2458.412598, -2320.785645, -262.593933), Vector(-155.749695, 1483.531128, 505.995087)},
-      {Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2459.576172, 1015.339722, 606.321045)},
-      {Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2325.258057, 2867.767822, 625.538391)},
-      {Vector(4679.416992, 4760.559570, -620.735901), Vector(-2325.258057, 2867.767822, 625.538391)},
-      {Vector(4679.416992, 4760.559570, -620.735901), Vector(-3481.643311, 6412.885742, 2247.709473)},
-      {Vector(1429.870972, 8615.100586, -827.024231), Vector(-3481.643311, 6412.885742, 2247.709473)}
-    }
+  local InBoxPlayer = {}
 
-    for f, g in pairs(IntercomZoneCords) do
-        table.Add( InBoxPlayer, ents.FindInBox( g[1], g[2] ) )
-    end
+  local IntercomZoneCords = {
+    {Vector(8095.897461, -2623.414307, -851.979187), Vector(4570.666504, 1554.973877, 883.979797)},
+    {Vector(1958.499268, -2882.740967, -866.897339), Vector(4570.666504, 1554.973877, 883.979797)},
+    {Vector(1958.499268, -2882.740967, -866.897339), Vector(-155.749695, 1483.531128, 505.995087)},
+    {Vector(-2458.412598, -2320.785645, -262.593933), Vector(-155.749695, 1483.531128, 505.995087)},
+    {Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2459.576172, 1015.339722, 606.321045)},
+    {Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2325.258057, 2867.767822, 625.538391)},
+    {Vector(4679.416992, 4760.559570, -620.735901), Vector(-2325.258057, 2867.767822, 625.538391)},
+    {Vector(4679.416992, 4760.559570, -620.735901), Vector(-3481.643311, 6412.885742, 2247.709473)},
+    {Vector(1429.870972, 8615.100586, -827.024231), Vector(-3481.643311, 6412.885742, 2247.709473)}
+  }
 
-    table.Empty( validintercomplayers )
+  for f, g in pairs(IntercomZoneCords) do
+    table.Add( InBoxPlayer, ents.FindInBox( g[1], g[2] ) )
+  end
 
-    for y, x in pairs(InBoxPlayer) do
-      if table.IsEmpty(validintercomplayers) then
-        if x:IsPlayer() then
-          table.insert( validintercomplayers, x )
-        end
-      else
-        for f, g in pairs(validintercomplayers) do
-          if x == g then
-          else
-            if x:IsPlayer() then
-              table.insert( validintercomplayers, x )
-            end
+  table.Empty( validintercomplayers )
+
+  for y, x in pairs(InBoxPlayer) do
+    if table.IsEmpty(validintercomplayers) then
+      if x:IsPlayer() then
+        table.insert( validintercomplayers, x )
+      end
+    else
+      for f, g in pairs(validintercomplayers) do
+        if x == g then
+        else
+          if x:IsPlayer() then
+            table.insert( validintercomplayers, x )
           end
         end
       end
     end
+  end
 
-    local counter = 0
-    for j, l in pairs(check_jobs_1) do
-        if team.GetName(ply:Team()) == l.name then
+  local counter = 0
+  for j, l in pairs(check_jobs_1) do
+    if team.GetName(ply:Team()) == l.name then
+      counter = counter + 1
+      for c, v in pairs(validintercomplayers) do
+        if ply == v then
           counter = counter + 1
-          for c, v in pairs(validintercomplayers) do
-            if ply == v then
-              counter = counter + 1
-            end
-          end
         end
-    end
-
-    if counter == 0 then
-
-      local intercom_selected_lang = sql.QueryValue("SELECT lang FROM sv_intercom_system_saved_language")
-
-      if intercom_selected_lang == "GER" then
-
-        local intercom_lang_table = {
-          "Zugangsberechtigung verweigert!",
-          "KRITISCHER-SYSTEMFEHLER"
-        }
-
-        net.Start("intercomfailed")
-        net.WriteTable(intercom_lang_table)
-        net.Send( ply )
-      elseif intercom_selected_lang == "POL" then
-
-        local intercom_lang_table = {
-          "Odmówiono autoryzacji dostępu!",
-          "KRYTYCZNY-BŁĄD-SYSTEMU"
-        }
-
-        net.Start("intercomfailed")
-        net.WriteTable(intercom_lang_table)
-        net.Send( ply )
-      elseif intercom_selected_lang == "FR" then
-
-        local intercom_lang_table = {
-          "autorisation d'accès refusée !",
-          "ERREUR-CRITIQUE-DU-SYSTÈME"
-        }
-
-        net.Start("intercomfailed")
-        net.WriteTable(intercom_lang_table)
-        net.Send( ply )
-      else
-
-        local intercom_lang_table = {
-          "access authorization denied!",
-          "CRITICAL-SYSTEM-ERROR"
-        }
-
-        net.Start("intercomfailed")
-        net.WriteTable(intercom_lang_table)
-        net.Send( ply )
-      end
-    elseif counter == 1 then
-
-      local intercom_selected_lang = sql.QueryValue("SELECT lang FROM sv_intercom_system_saved_language")
-
-      if intercom_selected_lang == "GER" then
-
-        local intercom_lang_table = {
-          "Außerhalb des Sendebereichs",
-          "KRITISCHER-SYSTEMFEHLER"
-        }
-
-        net.Start("intercomfailed2")
-        net.WriteTable(intercom_lang_table)
-        net.Send( ply )
-      elseif intercom_selected_lang == "POL" then
-
-        local intercom_lang_table = {
-          "poza zasięgiem!",
-          "KRYTYCZNY-BŁĄD-SYSTEMU"
-        }
-
-        net.Start("intercomfailed2")
-        net.WriteTable(intercom_lang_table)
-        net.Send( ply )
-      elseif intercom_selected_lang == "FR" then
-
-        local intercom_lang_table = {
-          "hors de portée !",
-          "ERREUR-CRITIQUE-DU-SYSTÈME"
-        }
-
-        net.Start("intercomfailed2")
-        net.WriteTable(intercom_lang_table)
-        net.Send( ply )
-      else
-
-        local intercom_lang_table = {
-          "out of range!",
-          "CRITICAL-SYSTEM-ERROR"
-        }
-
-        net.Start("intercomfailed2")
-        net.WriteTable(intercom_lang_table)
-        net.Send( ply )
-      end
-    elseif counter > 1 then
-      if IntercomIsPressedByUser == true then
-        IntercomIsPressedByUser = true
-        IntercomIsPressedUser = ply
-        CheckIfYouCanHear( ply, validintercomplayers )
-      else
-        hook.Add( "PlayerDeath", "CheckIfIntercomActivatedPlayerDied",function( cply1, inflictor, attacker )
-
-          if cply1 == ply then
-            for o, p in pairs(player.GetAll()) do
-                net.Start("intercom_overlay_end")
-                net.Send(p)
-            end
-            intercomactivateswitch = false
-            hook.Remove( "PlayerCanHearPlayersVoice", "CheckIfYouCanHearHook")
-            hook.Remove( "PlayerDeath", "CheckIfIntercomActivatedPlayerDied" )
-            hook.Remove( "PlayerDisconnected", "CheckIfIntercomActivatedPlayerLeft" )
-            hook.Remove( "PlayerChangedTeam", "CheckIfIntercomActivatedPlayerChangedJob" )
-            timer.Remove( "CheckIfPlayerEntered" )
-            IntercomIsPressedByUser = false
-            IntercomIsPressedUser = ""
-          end
-
-        end)
-        hook.Add( "PlayerDisconnected", "CheckIfIntercomActivatedPlayerLeft",function( cply2 )
-
-          if cply2 == ply then
-            for o, p in pairs(player.GetAll()) do
-                net.Start("intercom_overlay_end")
-                net.Send(p)
-            end
-            intercomactivateswitch = false
-            hook.Remove("PlayerCanHearPlayersVoice", "CheckIfYouCanHearHook")
-            hook.Remove( "PlayerDeath", "CheckIfIntercomActivatedPlayerDied" )
-            hook.Remove( "PlayerDisconnected", "CheckIfIntercomActivatedPlayerLeft" )
-            hook.Remove( "PlayerChangedTeam", "CheckIfIntercomActivatedPlayerChangedJob" )
-            timer.Remove( "CheckIfPlayerEntered" )
-            IntercomIsPressedByUser = false
-            IntercomIsPressedUser = ""
-          end
-
-        end)
-        hook.Add( "PlayerChangedTeam", "CheckIfIntercomActivatedPlayerChangedJob",function( cply3, oTeam, nTeam )
-
-          if cply3 == ply then
-            for o, p in pairs(player.GetAll()) do
-                net.Start("intercom_overlay_end")
-                net.Send(p)
-            end
-            intercomactivateswitch = false
-            hook.Remove("PlayerCanHearPlayersVoice", "CheckIfYouCanHearHook")
-            hook.Remove( "PlayerDeath", "CheckIfIntercomActivatedPlayerDied" )
-            hook.Remove( "PlayerDisconnected", "CheckIfIntercomActivatedPlayerLeft" )
-            hook.Remove( "PlayerChangedTeam", "CheckIfIntercomActivatedPlayerChangedJob" )
-            timer.Remove( "CheckIfPlayerEntered" )
-            IntercomIsPressedByUser = false
-            IntercomIsPressedUser = ""
-          end
-        end)
-        IntercomIsPressedByUser = true
-        IntercomIsPressedUser = ply
-        CheckIfYouCanHear( ply, validintercomplayers )
       end
     end
+  end
+
+  if counter == 0 then
+
+    if intercom_selected_lang == "GER" then
+
+      local intercom_lang_table = {
+        "Zugangsberechtigung verweigert!",
+        "KRITISCHER-SYSTEMFEHLER"
+      }
+
+      net.Start("intercomfailed")
+      net.WriteTable(intercom_lang_table)
+      net.Send( ply )
+    elseif intercom_selected_lang == "POL" then
+
+      local intercom_lang_table = {
+        "Odmówiono autoryzacji dostępu!",
+        "KRYTYCZNY-BŁĄD-SYSTEMU"
+      }
+
+      net.Start("intercomfailed")
+      net.WriteTable(intercom_lang_table)
+      net.Send( ply )
+    elseif intercom_selected_lang == "FR" then
+
+      local intercom_lang_table = {
+        "autorisation d'accès refusée !",
+        "ERREUR-CRITIQUE-DU-SYSTÈME"
+      }
+
+      net.Start("intercomfailed")
+      net.WriteTable(intercom_lang_table)
+      net.Send( ply )
+    else
+
+      local intercom_lang_table = {
+        "access authorization denied!",
+        "CRITICAL-SYSTEM-ERROR"
+      }
+
+      net.Start("intercomfailed")
+      net.WriteTable(intercom_lang_table)
+      net.Send( ply )
+    end
+  elseif counter == 1 then
+
+    if intercom_selected_lang == "GER" then
+
+      local intercom_lang_table = {
+        "Außerhalb des Sendebereichs",
+        "KRITISCHER-SYSTEMFEHLER"
+      }
+
+      net.Start("intercomfailed2")
+      net.WriteTable(intercom_lang_table)
+      net.Send( ply )
+    elseif intercom_selected_lang == "POL" then
+
+      local intercom_lang_table = {
+        "poza zasięgiem!",
+        "KRYTYCZNY-BŁĄD-SYSTEMU"
+      }
+
+      net.Start("intercomfailed2")
+      net.WriteTable(intercom_lang_table)
+      net.Send( ply )
+    elseif intercom_selected_lang == "FR" then
+
+      local intercom_lang_table = {
+        "hors de portée !",
+        "ERREUR-CRITIQUE-DU-SYSTÈME"
+      }
+
+      net.Start("intercomfailed2")
+      net.WriteTable(intercom_lang_table)
+      net.Send( ply )
+    else
+
+      local intercom_lang_table = {
+        "out of range!",
+        "CRITICAL-SYSTEM-ERROR"
+      }
+
+      net.Start("intercomfailed2")
+      net.WriteTable(intercom_lang_table)
+      net.Send( ply )
+    end
+  elseif counter > 1 then
+    if IntercomIsPressedByUser == true then
+      IntercomIsPressedByUser = true
+      IntercomIsPressedUser = ply
+      CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
+    else
+      hook.Add( "PlayerDeath", "CheckIfIntercomActivatedPlayerDied",function( cply1, inflictor, attacker )
+
+        if cply1 == ply then
+          for o, p in pairs(player.GetAll()) do
+              net.Start("intercom_overlay_end")
+              net.Send(p)
+          end
+          intercomactivateswitch = false
+          hook.Remove( "PlayerCanHearPlayersVoice", "CheckIfYouCanHearHook")
+          hook.Remove( "PlayerDeath", "CheckIfIntercomActivatedPlayerDied" )
+          hook.Remove( "PlayerDisconnected", "CheckIfIntercomActivatedPlayerLeft" )
+          hook.Remove( "PlayerChangedTeam", "CheckIfIntercomActivatedPlayerChangedJob" )
+          timer.Remove( "CheckIfPlayerEntered" )
+          IntercomIsPressedByUser = false
+          IntercomIsPressedUser = ""
+        end
+      end)
+
+      hook.Add( "PlayerDisconnected", "CheckIfIntercomActivatedPlayerLeft",function( cply2 )
+
+        if cply2 == ply then
+          for o, p in pairs(player.GetAll()) do
+              net.Start("intercom_overlay_end")
+              net.Send(p)
+          end
+          intercomactivateswitch = false
+          hook.Remove("PlayerCanHearPlayersVoice", "CheckIfYouCanHearHook")
+          hook.Remove( "PlayerDeath", "CheckIfIntercomActivatedPlayerDied" )
+          hook.Remove( "PlayerDisconnected", "CheckIfIntercomActivatedPlayerLeft" )
+          hook.Remove( "PlayerChangedTeam", "CheckIfIntercomActivatedPlayerChangedJob" )
+          timer.Remove( "CheckIfPlayerEntered" )
+          IntercomIsPressedByUser = false
+          IntercomIsPressedUser = ""
+        end
+      end)
+
+      hook.Add( "PlayerChangedTeam", "CheckIfIntercomActivatedPlayerChangedJob",function( cply3, oTeam, nTeam )
+
+        if cply3 == ply then
+          for o, p in pairs(player.GetAll()) do
+              net.Start("intercom_overlay_end")
+              net.Send(p)
+          end
+          intercomactivateswitch = false
+          hook.Remove("PlayerCanHearPlayersVoice", "CheckIfYouCanHearHook")
+          hook.Remove( "PlayerDeath", "CheckIfIntercomActivatedPlayerDied" )
+          hook.Remove( "PlayerDisconnected", "CheckIfIntercomActivatedPlayerLeft" )
+          hook.Remove( "PlayerChangedTeam", "CheckIfIntercomActivatedPlayerChangedJob" )
+          timer.Remove( "CheckIfPlayerEntered" )
+          IntercomIsPressedByUser = false
+          IntercomIsPressedUser = ""
+        end
+      end)
+      IntercomIsPressedByUser = true
+      IntercomIsPressedUser = ply
+      CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
+    end
+  end
 end
 
 function ENT:Use(act, call)
