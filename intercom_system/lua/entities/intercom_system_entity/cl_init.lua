@@ -32,13 +32,11 @@ function ENT:Draw()
 	self:DrawModel()
 
 	local text = "intercom system"
-
 	local mins, maxs = self:GetModelBounds()
 	local pos = self:GetPos() + Vector( 0, 0, maxs.z + 8 )
 
 	local ang = Angle( 0, SysTime() * 100 % 360, 90 )
 
 	Draw3DText( pos, ang, 0.2, text, false )
-
 	Draw3DText( pos, ang, 0.2, text, true )
 end
