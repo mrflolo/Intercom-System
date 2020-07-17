@@ -353,7 +353,7 @@ surface.CreateFont( "HudTextDefaultIntercom", {
 })
 
 local pos_w = ScrW()/2.4
-local width = ScrW()/6.74
+local width = ScrW()/6
 local text_pos_w = ScrW()/2.38
 local text_pos_h = ScrH()/36
 local color1
@@ -365,19 +365,24 @@ function()
 
 	surface.PlaySound( "intercom.wav" )
 
-	color1 = Vector(150,150,20)
+	color1 = Color(150,150,20)
 
-	hook.Add("HUDPaint", "IntercomDrawInfoMessageHook", function()
+  local DPanel_intercom_overlay_p1 = vgui.Create( "DPanel" )
+  DPanel_intercom_overlay_p1:SetSize( width, 80) -- setup size first
+  DPanel_intercom_overlay_p1:SetPos(ScrW()/2 - DPanel_intercom_overlay_p1:GetWide()/2,0)
+  DPanel_intercom_overlay_p1:SetKeyboardInputEnabled(false)
+  DPanel_intercom_overlay_p1:SetBackgroundColor(color1)
 
-		draw.RoundedBox(5, pos_w, 0, width, 80, color1)
+  timer.Simple( 1,function()
 
-	end)
+    DPanel_intercom_overlay_p1:Remove()
+
+  end)
 
 end)
 net.Receive( "intercom_overlay_p2",
 function()
 
-	hook.Remove("HUDPaint", "IntercomDrawInfoMessageHook")
 
 	color1 = Vector(120,200,120)
 	color2 = Vector(80, 80, 80)
@@ -385,8 +390,11 @@ function()
 
 	hook.Add("HUDPaint", "IntercomDrawInfoMessageHook", function()
 
-		draw.RoundedBox(5, pos_w, 0, width, 80, color1)
-		draw.DrawText(text, "HudTextDefaultIntercom", text_pos_w, text_pos_h, color2)
+    // Ghost Version of the text box for right pos
+    local boxW,boxH = draw.WordBox( 10, ScrW()/2, 25, text or "n/a", "HudTextDefaultIntercom", Color(0,0,0,0), Color(0,0,0,0))
+
+    // the text box it's self
+    draw.WordBox( 10, ScrW()/2 - boxW/2,boxH , text or "n/a", "HudTextDefaultIntercom", color1,color2)
 
 	end)
 
@@ -398,17 +406,17 @@ function()
 
 	surface.PlaySound( "alarm.wav" )
 
-	color1 = Vector(100,10,5)
+	color1 = Color(100,10,5)
 
-	hook.Add("HUDPaint", "IntercomDrawInfoMessageHook", function()
+  local DPanel_intercom_overlay_p3 = vgui.Create( "DPanel" )
+  DPanel_intercom_overlay_p3:SetSize( width, 80) -- setup size first
+  DPanel_intercom_overlay_p3:SetPos(ScrW()/2 - DPanel_intercom_overlay_p3:GetWide()/2,0)
+  DPanel_intercom_overlay_p3:SetKeyboardInputEnabled( false )
+  DPanel_intercom_overlay_p3:SetBackgroundColor(color1)
 
-		draw.RoundedBox(5, pos_w, 0, width, 80, color1)
+	timer.Simple( 0.5,function()
 
-	end)
-
-	timer.Simple( 1,function()
-
-		hook.Remove("HUDPaint", "IntercomDrawInfoMessageHook")
+		DPanel_intercom_overlay_p3:Remove()
 
 	end)
 
