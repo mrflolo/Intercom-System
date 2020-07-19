@@ -34,59 +34,30 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
 
     for g, h in pairs(validintercomplayers2) do
       if h:IsPlayer() then
-        if intercom_selected_lang == "GER" then
-          net.Start("intercom_overlay_p1")
+
+        local function SendOverlayStart(text,ChatText2,ChatText3) -- the intercom text
+          net.Start("intercom_overlay_start")
           local trans_tab = {}
           trans_tab.TimerLen = TimerLenth
-          trans_tab.TransString = "Intercom überträgt"
-          net.WriteTable(trans_tab)
-          net.Send(h)
-        elseif intercom_selected_lang == "POL" then
-          net.Start("intercom_overlay_p1")
-          local trans_tab = {}
-          trans_tab.TimerLen = TimerLenth
-          trans_tab.TransString = "transmisje interkomowe"
-          net.WriteTable(trans_tab)
-          net.Send(h)
-        elseif intercom_selected_lang == "FR" then
-          net.Start("intercom_overlay_p1")
-          local trans_tab = {}
-          trans_tab.TimerLen = TimerLenth
-          trans_tab.TransString = "l'interphone transmet"
-          net.WriteTable(trans_tab)
-          net.Send(h)
-        else
-          net.Start("intercom_overlay_p1")
-          local trans_tab = {}
-          trans_tab.TimerLen = TimerLenth
-          trans_tab.TransString = "intercom transmits"
+          trans_tab.ChatTextPhase2 = ChatText2 or "missing language"
+          trans_tab.ChatTextPhase3 = ChatText3 or "missing language"
+          trans_tab.TransString = text or "missing language"
           net.WriteTable(trans_tab)
           net.Send(h)
         end
+
+        if intercom_selected_lang == "GER" then
+          SendOverlayStart("Intercom überträgt","Übertragung gestartet","Übertragung beendet")
+        elseif intercom_selected_lang == "POL" then
+          SendOverlayStart("transmisje interkomowe","transmisja rozpoczęta","transmisja zakończona")
+        elseif intercom_selected_lang == "FR" then
+          SendOverlayStart("l'interphone transmet","la transmission a commencé","transmission terminée")
+        else
+          SendOverlayStart("intercom transmits","transmission started","transmission finished")
+        end
       end
     end
-
     timer.Simple(TimerLenth,function()
-
-      if intercom_selected_lang == "GER" then
-          net.Start("intercom_overlay_p2_own")
-          net.WriteString("Übertragung gestartet")
-          net.Send(ply)
-      elseif intercom_selected_lang == "POL" then
-          net.Start("intercom_overlay_p2_own")
-          net.WriteString("transmisja rozpoczęta")
-          net.Send(ply)
-      elseif intercom_selected_lang == "FR" then
-          net.Start("intercom_overlay_p2_own")
-          net.WriteString("la transmission a commencé")
-          net.Send(ply)
-      else
-        net.Start("intercom_overlay_p2_own")
-        net.WriteString("transmission started")
-        net.Send(ply)
-      end
-
-
 
       timer.Create( "CheckIfPlayerEntered", 5, 0,function()
 
@@ -132,25 +103,6 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
 
             validintercomplayers3 = table.KeysFromValue( validintercomplayers2, true )
 
-            for o, p in pairs(validintercomplayers3) do
-              if intercom_selected_lang == "GER" then
-                net.Start("intercom_overlay_p2")
-                net.WriteString("Intercom überträgt")
-                net.Send(p)
-              elseif intercom_selected_lang == "POL" then
-                net.Start("intercom_overlay_p2")
-                net.WriteString("transmisje interkomowe")
-                net.Send(p)
-              elseif intercom_selected_lang == "FR" then
-                net.Start("intercom_overlay_p2")
-                net.WriteString("l'interphone transmet")
-                net.Send(p)
-              else
-                net.Start("intercom_overlay_p2")
-                net.WriteString("intercom transmits")
-                net.Send(p)
-              end
-            end
             for d, f in pairs(player.GetAll()) do
               local counter = 0
               for c, v in pairs(validintercomplayers3) do
@@ -190,43 +142,10 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
 
   else
 
-    if intercom_selected_lang == "GER" then
-      net.Start("intercom_overlay_p3_own")
-      net.WriteString("Übertragung beendet")
-      net.Send(ply)
-    elseif intercom_selected_lang == "POL" then
-      net.Start("intercom_overlay_p3_own")
-      net.WriteString("transmisja zakończona")
-      net.Send(ply)
-    elseif intercom_selected_lang == "FR" then
-      net.Start("intercom_overlay_p3_own")
-      net.WriteString("transmission terminée")
-      net.Send(ply)
-    else
-      net.Start("intercom_overlay_p3_own")
-      net.WriteString("transmission finished")
-      net.Send(ply)
-    end
-
     for o, p in pairs(validintercomplayers3) do
       if p:IsPlayer() then
-        if intercom_selected_lang == "GER" then
-          net.Start("intercom_overlay_p3")
-          net.WriteString("Übertragung beendet")
-          net.Send(p)
-        elseif intercom_selected_lang == "POL" then
-          net.Start("intercom_overlay_p3")
-          net.WriteString("transmisja zakończona")
-          net.Send(p)
-        elseif intercom_selected_lang == "FR" then
-          net.Start("intercom_overlay_p3")
-          net.WriteString("transmission terminée")
-          net.Send(p)
-        else
-          net.Start("intercom_overlay_p3")
-          net.WriteString("transmission finished")
-          net.Send(p)
-        end
+        net.Start("intercom_overlay_end")
+        net.Send(p)
       end
     end
 
