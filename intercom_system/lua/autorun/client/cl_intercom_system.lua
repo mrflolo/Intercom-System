@@ -352,6 +352,24 @@ surface.CreateFont( "HudTextDefaultIntercom", {
 	outline = false,
 })
 
+surface.CreateFont( "HudTextDefaultIntercom_Small", {
+	font = "Arial",
+	extended = false,
+	size = 15,
+	weight = 500,
+	blursize = 0,
+	scanlines = 0,
+	antialias = true,
+	underline = false,
+	italic = false,
+	strikeout = false,
+	symbol = false,
+	rotary = false,
+	shadow = false,
+	additive = false,
+	outline = false,
+})
+
 local pos_w = ScrW()/2.4
 local width = ScrW()/6
 local text_pos_w = ScrW()/2.38
@@ -401,7 +419,24 @@ net.Receive( "intercom_overlay_start", function()
     DPanel_intercom_Text:SetText(text)
     DPanel_intercom_Text:SizeToContents()
     DPanel_intercom_Text:CenterHorizontal(0.5)
-    DPanel_intercom_Text:CenterVertical(0.5)
+    DPanel_intercom_Text:SetTextColor(color2)
+    local Avatar = vgui.Create( "AvatarImage", DPanel_intercom_overlay_p2 )
+    Avatar:SetSize( 32, 32)
+    Avatar:SetPos( 5, DPanel_intercom_overlay_p2:GetTall() - Avatar:GetTall() -5 )
+    Avatar:SetPlayer( InfosTab.Talker or LocalPlayer(), 64 )
+
+    local DPanel_intercom_Text_Player = vgui.Create("DLabel",DPanel_intercom_overlay_p2)
+    DPanel_intercom_Text_Player:SetFont("HudTextDefaultIntercom_Small")
+    DPanel_intercom_Text_Player:SetText("Gesprochen von: \n"..InfosTab.Talker:Nick() or "f")
+    DPanel_intercom_Text_Player:SizeToContents()
+    DPanel_intercom_Text_Player:SetPos(Avatar:GetWide()+5,DPanel_intercom_overlay_p2:GetTall() - Avatar:GetTall() -5 )
+    DPanel_intercom_Text_Player:SetTextColor(color2)
+
+    local DPanel_intercom_Text = vgui.Create("DLabel",DPanel_intercom_overlay_p2)
+    DPanel_intercom_Text:SetFont("HudTextDefaultIntercom")
+    DPanel_intercom_Text:SetText(text)
+    DPanel_intercom_Text:SizeToContents()
+    DPanel_intercom_Text:CenterHorizontal(0.5)
     DPanel_intercom_Text:SetTextColor(color2)
 
     local ChatTextP2 = InfosTab.ChatTextPhase2

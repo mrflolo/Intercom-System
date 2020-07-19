@@ -42,6 +42,9 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
           trans_tab.ChatTextPhase2 = ChatText2 or "missing language"
           trans_tab.ChatTextPhase3 = ChatText3 or "missing language"
           trans_tab.TransString = text or "missing language"
+          if IsValid(ply) then
+            trans_tab.Talker = ply
+          end
           net.WriteTable(trans_tab)
           net.Send(h)
         end
