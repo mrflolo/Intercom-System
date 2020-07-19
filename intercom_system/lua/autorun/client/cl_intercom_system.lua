@@ -356,83 +356,80 @@ local pos_w = ScrW()/2.4
 local width = ScrW()/6
 local text_pos_w = ScrW()/2.38
 local text_pos_h = ScrH()/36
-local color1
-local color2
-local text
 
-net.Receive( "intercom_overlay_p1",
-function()
+net.Receive( "intercom_overlay_p1", function()
 
 	surface.PlaySound( "intercom.wav" )
 
-	color1 = Color(150,150,20)
+  local InfosTab = net.ReadTable()
+  local text = InfosTab.TransString or "Nil"
+
+	local color1 = Color(150,150,20)
 
   local DPanel_intercom_overlay_p1 = vgui.Create( "DPanel" )
   DPanel_intercom_overlay_p1:SetSize( width, 80) -- setup size first
-  DPanel_intercom_overlay_p1:SetPos(ScrW()/2 - DPanel_intercom_overlay_p1:GetWide()/2,0)
+  DPanel_intercom_overlay_p1:SetPos(0,0)
+  DPanel_intercom_overlay_p1:CenterHorizontal(0.5) -- Center it
   DPanel_intercom_overlay_p1:SetKeyboardInputEnabled(false)
   DPanel_intercom_overlay_p1:SetBackgroundColor(color1)
+  DPanel_intercom_overlay_p1:SetAlpha(0)
 
-  timer.Simple( 1,function()
+  DPanel_intercom_overlay_p1:AlphaTo( 255, 0.5, 0, function()
+    timer.Simple(1.5,function()
+      DPanel_intercom_overlay_p1:Remove()
+    end)
+  end )
 
-    DPanel_intercom_overlay_p1:Remove()
+  timer.Simple(InfosTab.TimerLen or 2.3,function()
 
+    color1 = Color(120,200,120)
+    color2 = Color(80, 80, 80)
+
+    local DPanel_intercom_overlay_p2 = vgui.Create( "DPanel" )
+    DPanel_intercom_overlay_p2:SetSize( width, 80) -- setup size first
+    DPanel_intercom_overlay_p2:SetPos(0,0)
+    DPanel_intercom_overlay_p2:CenterHorizontal(0.5) -- Center it
+    DPanel_intercom_overlay_p2:SetKeyboardInputEnabled(false)
+    DPanel_intercom_overlay_p2:SetBackgroundColor(color1)
+    local DPanel_intercom_Text = vgui.Create("DLabel",DPanel_intercom_overlay_p2)
+    DPanel_intercom_Text:SetFont("HudTextDefaultIntercom")
+    DPanel_intercom_Text:SetText(text)
+    DPanel_intercom_Text:SizeToContents()
+    DPanel_intercom_Text:CenterHorizontal(0.5)
+    DPanel_intercom_Text:CenterVertical(0.5)
+
+    net.Receive( "intercom_overlay_p3", function()
+      DPanel_intercom_overlay_p2:Remove()
+
+      surface.PlaySound( "alarm.wav" )
+
+      color1 = Color(100,10,5)
+
+      local DPanel_intercom_overlay_p3 = vgui.Create( "DPanel" )
+      DPanel_intercom_overlay_p3:SetSize( width, 80)
+      DPanel_intercom_overlay_p3:SetPos(0,0)
+      DPanel_intercom_overlay_p3:CenterHorizontal(0.5)
+      DPanel_intercom_overlay_p3:SetKeyboardInputEnabled(false)
+      DPanel_intercom_overlay_p3:SetBackgroundColor(color1)
+      DPanel_intercom_overlay_p3:SetAlpha(255)
+
+      DPanel_intercom_overlay_p3:AlphaTo( 0, 1, 0, function()
+        timer.Simple(1.5,function()
+          DPanel_intercom_overlay_p3:Remove()
+        end)
+      end)
+    end)
   end)
-
-end)
-net.Receive( "intercom_overlay_p2",
-function()
-
-
-	color1 = Vector(120,200,120)
-	color2 = Vector(80, 80, 80)
-	text = net.ReadString()
-
-	hook.Add("HUDPaint", "IntercomDrawInfoMessageHook", function()
-
-    // Ghost Version of the text box for right pos
-    local boxW,boxH = draw.WordBox( 10, ScrW()/2, 25, text or "n/a", "HudTextDefaultIntercom", Color(0,0,0,0), Color(0,0,0,0))
-
-    // the text box it's self
-    draw.WordBox( 10, ScrW()/2 - boxW/2,boxH , text or "n/a", "HudTextDefaultIntercom", color1,color2)
-
-	end)
-
-end)
-net.Receive( "intercom_overlay_p3",
-function()
-
-	hook.Remove("HUDPaint", "IntercomDrawInfoMessageHook")
-
-	surface.PlaySound( "alarm.wav" )
-
-	color1 = Color(100,10,5)
-
-  local DPanel_intercom_overlay_p3 = vgui.Create( "DPanel" )
-  DPanel_intercom_overlay_p3:SetSize( width, 80) -- setup size first
-  DPanel_intercom_overlay_p3:SetPos(ScrW()/2 - DPanel_intercom_overlay_p3:GetWide()/2,0)
-  DPanel_intercom_overlay_p3:SetKeyboardInputEnabled( false )
-  DPanel_intercom_overlay_p3:SetBackgroundColor(color1)
-
-	timer.Simple( 0.5,function()
-
-		DPanel_intercom_overlay_p3:Remove()
-
-	end)
-
 end)
 
 net.Receive( "intercom_overlay_end",function()
-
-	hook.Remove("HUDPaint", "IntercomDrawInfoMessageHook")
-
+  -- use less
+  -- u can remove this net msg
 end)
 
 net.Receive( "intercom_overlay_p2_own",function()
 
-	local intercom_txt1 = ""
-
-	intercom_txt1 = net.ReadString()
+	local intercom_txt1 = net.ReadString() or "N/A"
 
 	chat.AddText( Color( 180, 20, 20 ), " !--------------------------------------------------------------------! " )
 	chat.AddText( Color( 120, 20, 20 ), "  [INTERCOM SYSTEM] ", Color( 50, 50, 50 ), intercom_txt1 )
@@ -442,9 +439,7 @@ end)
 
 net.Receive( "intercom_overlay_p3_own",function()
 
-	local intercom_txt2 = ""
-
-	intercom_txt2 = net.ReadString()
+	local intercom_txt2 = net.ReadString() or "N/A"
 
 	chat.AddText( Color( 180, 20, 20 ), " !--------------------------------------------------------------------! " )
 	chat.AddText( Color( 120, 20, 20 ), "  [INTERCOM SYSTEM] ", Color( 50, 50, 50 ), intercom_txt2 )
