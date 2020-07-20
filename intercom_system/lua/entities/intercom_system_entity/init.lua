@@ -28,14 +28,15 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
 
   local validintercomplayers2 = validintercomplayers
   local validintercomplayers3 = validintercomplayers
+  local validintercomplayers4 = validintercomplayers
 
   if intercomactivateswitch == false then
-    local TimerLenth = 2.3 -- change this when you want to change the time
+
+    local TimerLenth = 2.3
 
     for g, h in pairs(validintercomplayers2) do
       if h:IsPlayer() then
-
-        local function SendOverlayStart(text,ChatText2,ChatText3) -- the intercom text
+        local function SendOverlayStart(text,ChatText2,ChatText3)
           net.Start("intercom_overlay_start")
           local trans_tab = {}
           trans_tab.TimerLen = TimerLenth
@@ -50,44 +51,61 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
         end
 
         if intercom_selected_lang == "GER" then
-          SendOverlayStart("Intercom überträgt","Übertragung gestartet","Übertragung beendet")
+          SendOverlayStart( "Intercom überträgt", "Übertragung gestartet", "Übertragung beendet" )
         elseif intercom_selected_lang == "POL" then
-          SendOverlayStart("transmisje interkomowe","transmisja rozpoczęta","transmisja zakończona")
+          SendOverlayStart( "transmisje interkomowe", "transmisja rozpoczęta", "transmisja zakończona" )
         elseif intercom_selected_lang == "FR" then
-          SendOverlayStart("l'interphone transmet","la transmission a commencé","transmission terminée")
+          SendOverlayStart( "l'interphone transmet", "la transmission a commencé", "transmission terminée" )
         else
-          SendOverlayStart("intercom transmits","transmission started","transmission finished")
+          SendOverlayStart( "intercom transmits", "transmission started", "transmission finished" )
         end
       end
     end
-    timer.Simple(TimerLenth,function()
 
-      timer.Create( "CheckIfPlayerEntered", 5, 0,function()
+    timer.Simple( TimerLenth,function()
+
+      timer.Create( "CheckIfPlayerEntered", 2.5, 0,function()
 
         local InBoxPlayer = {}
+        local IntercomZoneCords = {}
 
-        local IntercomZoneCords = {
-          {Vector(8095.897461, -2623.414307, -851.979187), Vector(4570.666504, 1554.973877, 883.979797)},
-          {Vector(1958.499268, -2882.740967, -866.897339), Vector(4570.666504, 1554.973877, 883.979797)},
-          {Vector(1958.499268, -2882.740967, -866.897339), Vector(-155.749695, 1483.531128, 505.995087)},
-          {Vector(-2458.412598, -2320.785645, -262.593933), Vector(-155.749695, 1483.531128, 505.995087)},
-          {Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2459.576172, 1015.339722, 606.321045)},
-          {Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2325.258057, 2867.767822, 625.538391)},
-          {Vector(4679.416992, 4760.559570, -620.735901), Vector(-2325.258057, 2867.767822, 625.538391)},
-          {Vector(4679.416992, 4760.559570, -620.735901), Vector(-3481.643311, 6412.885742, 2247.709473)},
-          {Vector(1429.870972, 8615.100586, -827.024231), Vector(-3481.643311, 6412.885742, 2247.709473)}
-        }
+        logcount = sql.QueryValue("SELECT COUNT(cord1_x) FROM sv_intercom_system_saved_zonestable")
+
+        if logcount == false then print("getting sv_intercom_system_saved_zonestable table failed") return end
+
+        local b2 = tonumber( logcount, 10 )
+
+        for o=1, b2 do
+          local IntercomZoneCords_temp = {
+            sql.QueryRow("SELECT cord1_x FROM sv_intercom_system_saved_zonestable", o ),
+            sql.QueryRow("SELECT cord1_y FROM sv_intercom_system_saved_zonestable", o ),
+            sql.QueryRow("SELECT cord1_z FROM sv_intercom_system_saved_zonestable", o ),
+            sql.QueryRow("SELECT cord2_x FROM sv_intercom_system_saved_zonestable", o ),
+            sql.QueryRow("SELECT cord2_y FROM sv_intercom_system_saved_zonestable", o ),
+            sql.QueryRow("SELECT cord2_z FROM sv_intercom_system_saved_zonestable", o )
+          }
+          table.insert( IntercomZoneCords, IntercomZoneCords_temp )
+        end
 
         local IntercomWaitForTableCheck = true
         local IntercomZoneTableCount = 0
 
         timer.Create( "IntercomZoneCooldownTimer", 0.01, table.Count(IntercomZoneCords), function()
           IntercomZoneTableCount = IntercomZoneTableCount + 1
-          local IntercomZoneCords2 = IntercomZoneCords[IntercomZoneTableCount]
-          table.Add( InBoxPlayer, ents.FindInBox( IntercomZoneCords2[1], IntercomZoneCords2[2] ) )
-          -- print("Checking Zone " .. IntercomZoneTableCount .. " finished")
-          if IntercomZoneTableCount == table.Count(IntercomZoneCords) then
+
+          if table.IsEmpty(IntercomZoneCords) then
             IntercomWaitForTableCheck = false
+          else
+
+            local IntercomZoneCords2 = IntercomZoneCords[IntercomZoneTableCount]
+            local IntercomShowVector1 = Vector( IntercomZoneCords2[1].cord1_x, IntercomZoneCords2[2].cord1_y, IntercomZoneCords2[3].cord1_z )
+            local IntercomShowVector2 = Vector( IntercomZoneCords2[4].cord2_x, IntercomZoneCords2[5].cord2_y, IntercomZoneCords2[6].cord2_z )
+            table.Add( InBoxPlayer, ents.FindInBox( IntercomShowVector1, IntercomShowVector2 ) )
+
+            if IntercomZoneTableCount == table.Count(IntercomZoneCords) then
+              IntercomWaitForTableCheck = false
+            end
+
           end
         end)
 
@@ -105,6 +123,37 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
             end
 
             validintercomplayers3 = table.KeysFromValue( validintercomplayers2, true )
+
+            for o, p in pairs(validintercomplayers3) do
+              if validintercomplayers4[p] == true then
+              else
+                local function SendOverlayStart(text,ChatText2,ChatText3)
+                  net.Start("intercom_overlay_p2")
+                  local trans_tab = {}
+                  trans_tab.TimerLen = TimerLenth
+                  trans_tab.ChatTextPhase2 = ChatText2 or "missing language"
+                  trans_tab.ChatTextPhase3 = ChatText3 or "missing language"
+                  trans_tab.TransString = text or "missing language"
+                  if IsValid(ply) then
+                    trans_tab.Talker = ply
+                  end
+                  net.WriteTable(trans_tab)
+                  net.Send(p)
+                end
+
+                if intercom_selected_lang == "GER" then
+                  SendOverlayStart( "Intercom überträgt", "Übertragung gestartet", "Übertragung beendet" )
+                elseif intercom_selected_lang == "POL" then
+                  SendOverlayStart( "transmisje interkomowe", "transmisja rozpoczęta", "transmisja zakończona" )
+                elseif intercom_selected_lang == "FR" then
+                  SendOverlayStart( "l'interphone transmet", "la transmission a commencé", "transmission terminée" )
+                else
+                  SendOverlayStart( "intercom transmits", "transmission started", "transmission finished" )
+                end
+              end
+            end
+
+            validintercomplayers4 = validintercomplayers2
 
             for d, f in pairs(player.GetAll()) do
               local counter = 0
@@ -127,6 +176,7 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
               CheckIfIntercomShouldWait()
             end)
           end
+
         end
         CheckIfIntercomShouldWait()
       end)
@@ -145,13 +195,6 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
 
   else
 
-    for o, p in pairs(validintercomplayers3) do
-      if p:IsPlayer() then
-        net.Start("intercom_overlay_end")
-        net.Send(p)
-      end
-    end
-
     table.Empty(validintercomplayers3)
 
     hook.Remove( "PlayerCanHearPlayersVoice", "CheckIfYouCanHearHook" )
@@ -164,6 +207,11 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
     IntercomIsPressedUser = ""
 
     intercomactivateswitch = false
+
+    timer.Simple(0.1,function()
+      net.Start("intercom_overlay_end")
+      net.Broadcast()
+    end)
   end
 end
 
@@ -184,29 +232,45 @@ function CheckIfJob(ply)
   local validintercomplayers = {}
 
   local InBoxPlayer = {}
+  local IntercomZoneCords = {}
 
-  local IntercomZoneCords = {
-    {Vector(8095.897461, -2623.414307, -851.979187), Vector(4570.666504, 1554.973877, 883.979797)},
-    {Vector(1958.499268, -2882.740967, -866.897339), Vector(4570.666504, 1554.973877, 883.979797)},
-    {Vector(1958.499268, -2882.740967, -866.897339), Vector(-155.749695, 1483.531128, 505.995087)},
-    {Vector(-2458.412598, -2320.785645, -262.593933), Vector(-155.749695, 1483.531128, 505.995087)},
-    {Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2459.576172, 1015.339722, 606.321045)},
-    {Vector(4594.784180, 2140.836426, -1025.721436), Vector(-2325.258057, 2867.767822, 625.538391)},
-    {Vector(4679.416992, 4760.559570, -620.735901), Vector(-2325.258057, 2867.767822, 625.538391)},
-    {Vector(4679.416992, 4760.559570, -620.735901), Vector(-3481.643311, 6412.885742, 2247.709473)},
-    {Vector(1429.870972, 8615.100586, -827.024231), Vector(-3481.643311, 6412.885742, 2247.709473)}
-  }
+  logcount = sql.QueryValue("SELECT COUNT(cord1_x) FROM sv_intercom_system_saved_zonestable")
+
+  if logcount == false then print("getting sv_intercom_system_saved_zonestable table failed") return end
+
+  local b2 = tonumber( logcount, 10 )
+
+  for o=1, b2 do
+    local IntercomZoneCords_temp = {
+      sql.QueryRow("SELECT cord1_x FROM sv_intercom_system_saved_zonestable", o ),
+      sql.QueryRow("SELECT cord1_y FROM sv_intercom_system_saved_zonestable", o ),
+      sql.QueryRow("SELECT cord1_z FROM sv_intercom_system_saved_zonestable", o ),
+      sql.QueryRow("SELECT cord2_x FROM sv_intercom_system_saved_zonestable", o ),
+      sql.QueryRow("SELECT cord2_y FROM sv_intercom_system_saved_zonestable", o ),
+      sql.QueryRow("SELECT cord2_z FROM sv_intercom_system_saved_zonestable", o )
+    }
+    table.insert( IntercomZoneCords, IntercomZoneCords_temp )
+  end
 
   local IntercomWaitForTableCheck = true
   local IntercomZoneTableCount = 0
 
   timer.Create( "IntercomZoneCooldownTimer", 0.01, table.Count(IntercomZoneCords), function()
     IntercomZoneTableCount = IntercomZoneTableCount + 1
-    local IntercomZoneCords2 = IntercomZoneCords[IntercomZoneTableCount]
-    table.Add( InBoxPlayer, ents.FindInBox( IntercomZoneCords2[1], IntercomZoneCords2[2] ) )
-    -- print("CheckedTheZoneCords " .. IntercomZoneTableCount)
-    if IntercomZoneTableCount == table.Count(IntercomZoneCords) then
+
+    if table.IsEmpty(IntercomZoneCords) then
       IntercomWaitForTableCheck = false
+    else
+
+      local IntercomZoneCords2 = IntercomZoneCords[IntercomZoneTableCount]
+      local IntercomShowVector1 = Vector( IntercomZoneCords2[1].cord1_x, IntercomZoneCords2[2].cord1_y, IntercomZoneCords2[3].cord1_z )
+      local IntercomShowVector2 = Vector( IntercomZoneCords2[4].cord2_x, IntercomZoneCords2[5].cord2_y, IntercomZoneCords2[6].cord2_z )
+      table.Add( InBoxPlayer, ents.FindInBox( IntercomShowVector1, IntercomShowVector2 ) )
+
+      if IntercomZoneTableCount == table.Count(IntercomZoneCords) then
+        IntercomWaitForTableCheck = false
+      end
+
     end
   end)
 
@@ -320,10 +384,10 @@ function CheckIfJob(ply)
           hook.Add( "PlayerDeath", "CheckIfIntercomActivatedPlayerDied",function( cply1, inflictor, attacker )
 
             if cply1 == ply then
-              for o, p in pairs(player.GetAll()) do
-                  net.Start("intercom_overlay_end")
-                  net.Send(p)
-              end
+
+              net.Start("intercom_overlay_end")
+              net.Broadcast()
+
               intercomactivateswitch = false
 
               hook.Remove( "PlayerCanHearPlayersVoice", "CheckIfYouCanHearHook")
@@ -340,10 +404,10 @@ function CheckIfJob(ply)
           hook.Add( "PlayerDisconnected", "CheckIfIntercomActivatedPlayerLeft",function( cply2 )
 
             if cply2 == ply then
-              for o, p in pairs(player.GetAll()) do
-                  net.Start("intercom_overlay_end")
-                  net.Send(p)
-              end
+
+              net.Start("intercom_overlay_end")
+              net.Broadcast()
+
               intercomactivateswitch = false
 
               hook.Remove("PlayerCanHearPlayersVoice", "CheckIfYouCanHearHook")
@@ -360,10 +424,10 @@ function CheckIfJob(ply)
           hook.Add( "PlayerChangedTeam", "CheckIfIntercomActivatedPlayerChangedJob",function( cply3, oTeam, nTeam )
 
             if cply3 == ply then
-              for o, p in pairs(player.GetAll()) do
-                  net.Start("intercom_overlay_end")
-                  net.Send(p)
-              end
+
+              net.Start("intercom_overlay_end")
+              net.Broadcast()
+
               intercomactivateswitch = false
 
               hook.Remove("PlayerCanHearPlayersVoice", "CheckIfYouCanHearHook")

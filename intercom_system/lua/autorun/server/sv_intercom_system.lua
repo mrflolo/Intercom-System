@@ -1,121 +1,59 @@
-util.AddNetworkString("ChangeIntercomSaveTeams")
-util.AddNetworkString("ChangeIntercomSaveLang")
-util.AddNetworkString("intercom_overlay_start" )
-util.AddNetworkString("intercom_overlay_end")
-util.AddNetworkString("intercomfailed" )
-util.AddNetworkString("intercomfailed2" )
-
-resource.AddFile("sound/alarm.wav")
-resource.AddFile("sound/intercom.wav")
-
-net.Receive( "ChangeIntercomSaveTeams", function( len, ply )
-
+net.Receive("GetIntercomZones",function( l, ply )
   if !ply:IsSuperAdmin() then if !ply:IsAdmin() then print("ERROR ! Player has no acces") return end end
 
-  sql.Query("DELETE FROM sv_intercom_system_saved_teams")
+  local IntercomZoneCords = {}
 
-  for j, k in pairs(net.ReadTable()) do
-      sql.Query("INSERT INTO sv_intercom_system_saved_teams (`name`) VALUES ('"..k.."')")
-  end
+  logcount = sql.QueryValue("SELECT COUNT(cord1_x) FROM sv_intercom_system_saved_zonestable")
 
-  logcount = sql.QueryValue("SELECT COUNT(name) FROM sv_intercom_system_saved_teams")
+  if logcount == false then print("getting sv_intercom_system_saved_zonestable table failed") return end
 
   local b2 = tonumber( logcount, 10 )
 
-  local DataBaseOutput = {}
-
   for o=1, b2 do
-
-    table.insert( DataBaseOutput, sql.QueryRow("SELECT name FROM sv_intercom_system_saved_teams", o ))
-
+    local IntercomZoneCords_temp = {
+      sql.QueryRow("SELECT cord1_x FROM sv_intercom_system_saved_zonestable", o ),
+      sql.QueryRow("SELECT cord1_y FROM sv_intercom_system_saved_zonestable", o ),
+      sql.QueryRow("SELECT cord1_z FROM sv_intercom_system_saved_zonestable", o ),
+      sql.QueryRow("SELECT cord2_x FROM sv_intercom_system_saved_zonestable", o ),
+      sql.QueryRow("SELECT cord2_y FROM sv_intercom_system_saved_zonestable", o ),
+      sql.QueryRow("SELECT cord2_z FROM sv_intercom_system_saved_zonestable", o )
+    }
+    table.insert( IntercomZoneCords, IntercomZoneCords_temp )
   end
 
-  print("NOTE ! Intercom access jobs were changed by: " .. ply:Nick() .. ", new Jobs: ")
+  net.Start("SendIntercomZones")
+  net.WriteTable(IntercomZoneCords)
+  net.Send(ply)
 
-  if table.IsEmpty(DataBaseOutput) then
-    print(" ")
-    print("none")
-    print(" ")
-  else
-    print(" ")
-    PrintTable( DataBaseOutput )
-    print(" ")
+end)
+
+net.Receive("SaveNewIntercomZone",function( l, ply )
+  if !ply:IsSuperAdmin() then if !ply:IsAdmin() then print("ERROR ! Player has no acces") return end end
+
+  local CordTable = net.ReadTable()
+
+  local CordTable_1 = CordTable[1]
+  local CordTable_2 = CordTable[2]
+
+  local SQLquery = sql.Query("INSERT INTO sv_intercom_system_saved_zonestable (`cord1_x`, `cord1_y`, `cord1_z`, `cord2_x`, `cord2_y`, `cord2_z`) VALUES ('"..CordTable_1.x.."', '"..CordTable_1.y.."', '"..CordTable_1.z.."', '"..CordTable_2.x.."', '"..CordTable_2.y.."', '"..CordTable_2.z.."')")
+
+  if SQLquery == false then
+    Msg("Error ! Something went wrong by creating the zone table. \n")
+    Msg( sql.LastError( SQLquery ) .. "\n" )
   end
 
 end)
 
-net.Receive( "ChangeIntercomSaveLang", function( len, ply )
+net.Receive( "RemoveIntercomZone", function( l, ply )
 
   if !ply:IsSuperAdmin() then if !ply:IsAdmin() then print("ERROR ! Player has no acces") return end end
 
-  sql.Query("DELETE FROM sv_intercom_system_saved_language")
+  local SQLSaveTable = net.ReadTable()
 
-  for j, k in pairs(net.ReadTable()) do
-      sql.Query("INSERT INTO sv_intercom_system_saved_language (`lang`) VALUES ('"..k.."')")
+  local SQLquery = sql.Query("DELETE FROM sv_intercom_system_saved_zonestable WHERE cord1_x='"..SQLSaveTable[1].."' and cord1_y='"..SQLSaveTable[2].."' and cord1_z='"..SQLSaveTable[3].."' and cord2_x='"..SQLSaveTable[4].."' and cord2_y='"..SQLSaveTable[5].."' and cord2_z='"..SQLSaveTable[6].."'")
+
+  if SQLquery == false then
+    Msg("Error ! Something went wrong by deleting the zone table. \n")
+    Msg( sql.LastError( SQLquery ) .. "\n" )
   end
-
-  logcount = sql.QueryValue("SELECT COUNT(lang) FROM sv_intercom_system_saved_language")
-
-  local b2 = tonumber( logcount, 10 )
-
-  local DataBaseOutput = {}
-
-  for o=1, b2 do
-
-    table.insert( DataBaseOutput, sql.QueryRow("SELECT lang FROM sv_intercom_system_saved_language", o ))
-
-  end
-
-  print("NOTE ! Intercom language was changed by: " .. ply:Nick() .. ", new language: ")
-
-  if table.IsEmpty(DataBaseOutput) then
-    print(" ")
-    print("none")
-    print(" ")
-  else
-    print(" ")
-    PrintTable( DataBaseOutput )
-    print(" ")
-  end
-
 end)
-
-local function table_exist()
-  if sql.TableExists("sv_intercom_system_saved_teams") then
-    Msg("sv_intercom_system_saved_teams table exists! \n")
-  else
-    local query = "CREATE TABLE sv_intercom_system_saved_teams ( name varchar(255) )"
-    local result = sql.Query(query)
-    if sql.TableExists("sv_intercom_system_saved_teams") then
-      Msg("Succes ! sv_intercom_system_saved_teams table was created \n")
-    else
-      Msg("Error ! Something went wrong by creating the sv_intercom_system_saved_teams table. \n")
-      Msg( sql.LastError( result ) .. "\n" )
-    end
-  end
-
-  if sql.TableExists("sv_intercom_system_saved_language") then
-    Msg("sv_intercom_system_saved_language table exists! \n")
-  else
-    local query = "CREATE TABLE sv_intercom_system_saved_language ( lang varchar(255) )"
-    local result = sql.Query(query)
-    if sql.TableExists("sv_intercom_system_saved_language") then
-      Msg("Succes ! sv_intercom_system_saved_language table was created \n")
-    else
-      Msg("Error ! Something went wrong by creating the sv_intercom_system_saved_language table. \n")
-      Msg( sql.LastError( result ) .. "\n" )
-    end
-  end
-end
-
-table_exist()
-
-timer.Simple( 0, function()
-  local function intercomvers()
-
-    print("Intercom Version v0.2-Beta")
-
-  end
-
-  DarkRP.defineChatCommand("intercomvers", intercomvers )
-end )
