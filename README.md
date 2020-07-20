@@ -13,12 +13,12 @@
 - [x] Feedback on use when the person isn´t in the right job or the Intercom isn´t placed in the zone(s).
 - [x] Currently only available in a mix of German and English
 - [X] Multi-Language support for English, German, French and Polish
+- [X] Configurable zones so the addon can be used on every map [BETA]
 
 **What's coming next:*
-- [ ] Configurable zones so the addon can be used on every map (WIP)
+- [ ] no big fixes, only some small fixes
 
 **Requirements:**
-- Currently only works on [Site-10 Map](https://steamcommunity.com/sharedfiles/filedetails/?id=1931210390)
 - Needs [DarkRP](https://steamcommunity.com/sharedfiles/filedetails/?id=248302805) gamemode to work.
 - For better usergroup management is [ULX](https://steamcommunity.com/sharedfiles/filedetails/?id=557962280) recommended.
 
