@@ -16,7 +16,7 @@
 - [X] Configurable zones so the addon can be used on every map [BETA]
 
 **What's coming next:*
-- [ ] no big fixes, only some small fixes
+- [ ] no big fixes, only some small enhancements
 
 **Requirements:**
 - Needs [DarkRP](https://steamcommunity.com/sharedfiles/filedetails/?id=248302805) gamemode to work.
