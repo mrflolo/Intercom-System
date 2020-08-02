@@ -26,6 +26,8 @@
 Just subscribe to it on [Steam](https://steamcommunity.com/sharedfiles/filedetails/?id=2147062567) (Currently not published)
 Or download the latest version of the addon from here.
 
+## [Security Policy](https://github.com/mrflolo/Intercom-System/blob/master/SECURITY.md)
+
 ## [Translation](https://github.com/mrflolo/Intercom-System/wiki/Translation)
 
 ## [FAQ](https://github.com/mrflolo/Intercom-System/wiki/FAQ)
