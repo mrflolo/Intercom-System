@@ -26,26 +26,6 @@
 Just subscribe to it on [Steam](https://steamcommunity.com/sharedfiles/filedetails/?id=2147062567) (Currently not published)
 Or download the latest version of the addon from here.
 
-## Translations: 
+## [Translation](https://github.com/mrflolo/Intercom-System/wiki/Translation)
 
-### English:
-> [Me (mr_flolo)](https://steamcommunity.com/id/mrflolo/), [Venuska1117](https://steamcommunity.com/id/Venuska1117/)
-
-### German: 
-> [Me (mr_flolo)](https://steamcommunity.com/id/mrflolo/)
-
-### Polish:
-> [Venuska1117](https://steamcommunity.com/id/Venuska1117/)
-
-### French:
-> [Vincent Winchester](https://steamcommunity.com/id/vincent-winchester/), [Venuska1117](https://steamcommunity.com/id/Venuska1117/)
-
-
-## FAQ: 
-
-When did you start making this addon? 
-> january 2020
-
-How long did you need for this addon?
-> Im still working on it, so I dont know how long i will work on it.
-
+## [FAQ](https://github.com/mrflolo/Intercom-System/wiki/FAQ)
