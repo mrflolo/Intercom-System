@@ -13,7 +13,7 @@
 - [x] Feedback on use when the person isn´t in the right job or the Intercom isn´t placed in the zone(s).
 - [x] Currently only available in a mix of German and English
 - [X] Multi-Language support for English, German, French and Polish
-- [X] **Configurable zones so the addon can be used on EVERY map [BETA]**
+- [X] Configurable zones so the addon can be used on EVERY map
 
 **What's coming next:*
 - [ ] no big fixes, only some small enhancements
