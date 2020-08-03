@@ -12,6 +12,7 @@
 - [x] Intercom can only be used inside the configured zone(s).
 - [x] Feedback on use when the person isn´t in the right job or the entity isn´t placed in the zone(s).
 - [x] Multi-Language support for English, German, French, and Polish.
+- [x] Vgui based interface.
 
 **What's coming next:*
 - [ ] no big updates, only some small enhancements
