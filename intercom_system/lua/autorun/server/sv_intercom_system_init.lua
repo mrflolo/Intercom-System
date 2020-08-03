@@ -1,8 +1,27 @@
+--[=[---------------------------------------------------------------------------------------
+║                                                                                          ║
+║               Copyright (c) 2020 | mr_flolo / mrflolo | All rights reserved              ║
+║                                                                                          ║
+║                           Contact: mrflolo.addons@gmx.de                                 ║
+║                                                                                          ║
+║------------------------------------------------------------------------------------------║
+║                                                                                          ║
+║                                    Intercom System                                       ║
+║                                                                                          ║
+║                     All code and contributors can be seen on GitHub.                     ║
+║                                                                                          ║
+║                        https://github.com/mrflolo/Intercom-System                        ║
+║                                                                                          ║
+║                    I do not own any of the Sounds used in this Addon.                    ║
+║                                                                                          ║
+-----------------------------------------------------------------------------------------]=]
+
 util.AddNetworkString("ChangeIntercomSaveTeams")
 util.AddNetworkString("ChangeIntercomSaveLang")
 util.AddNetworkString("intercom_overlay_start" )
-util.AddNetworkString("intercom_overlay_p2" )
+util.AddNetworkString("intercom_overlay_start_2" )
 util.AddNetworkString("intercom_overlay_end")
+util.AddNetworkString("intercom_overlay_end_2")
 util.AddNetworkString("intercomfailed" )
 util.AddNetworkString("intercomfailed2" )
 util.AddNetworkString("GetIntercomZones" )
@@ -130,7 +149,7 @@ table_exist()
 
 timer.Simple( 0, function()
   local function intercomvers()
-    print("Intercom Version v0.3-Beta")
+    print("Intercom Version v1.0 [Last Updated 03.08.2020] - yay")
   end
 
   DarkRP.defineChatCommand("intercomvers", intercomvers )

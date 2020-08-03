@@ -1,3 +1,21 @@
+--[=[---------------------------------------------------------------------------------------
+║                                                                                          ║
+║               Copyright (c) 2020 | mr_flolo / mrflolo | All rights reserved              ║
+║                                                                                          ║
+║                           Contact: mrflolo.addons@gmx.de                                 ║
+║                                                                                          ║
+║------------------------------------------------------------------------------------------║
+║                                                                                          ║
+║                                    Intercom System                                       ║
+║                                                                                          ║
+║                     All code and contributors can be seen on GitHub.                     ║
+║                                                                                          ║
+║                        https://github.com/mrflolo/Intercom-System                        ║
+║                                                                                          ║
+║                    I do not own any of the Sounds used in this Addon.                    ║
+║                                                                                          ║
+-----------------------------------------------------------------------------------------]=]
+
 net.Receive("GetIntercomZones",function( l, ply )
   if !ply:IsSuperAdmin() then if !ply:IsAdmin() then print("ERROR ! Player has no acces") return end end
 

@@ -1,3 +1,21 @@
+--[=[---------------------------------------------------------------------------------------
+║                                                                                          ║
+║               Copyright (c) 2020 | mr_flolo / mrflolo | All rights reserved              ║
+║                                                                                          ║
+║                           Contact: mrflolo.addons@gmx.de                                 ║
+║                                                                                          ║
+║------------------------------------------------------------------------------------------║
+║                                                                                          ║
+║                                    Intercom System                                       ║
+║                                                                                          ║
+║                     All code and contributors can be seen on GitHub.                     ║
+║                                                                                          ║
+║                        https://github.com/mrflolo/Intercom-System                        ║
+║                                                                                          ║
+║                    I do not own any of the Sounds used in this Addon.                    ║
+║                                                                                          ║
+-----------------------------------------------------------------------------------------]=]
+
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 
@@ -29,6 +47,7 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
   local validintercomplayers2 = validintercomplayers
   local validintercomplayers3 = validintercomplayers
   local validintercomplayers4 = validintercomplayers
+  local validintercomplayers5 = {}
 
   if intercomactivateswitch == false then
 
@@ -127,8 +146,9 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
             for o, p in pairs(validintercomplayers3) do
               if validintercomplayers4[p] == true then
               else
+                validintercomplayers5[p] = false
                 local function SendOverlayStart(text,ChatText2,ChatText3)
-                  net.Start("intercom_overlay_p2")
+                  net.Start("intercom_overlay_start_2")
                   local trans_tab = {}
                   trans_tab.TimerLen = TimerLenth
                   trans_tab.ChatTextPhase2 = ChatText2 or "missing language"
@@ -166,8 +186,12 @@ function CheckIfYouCanHear( ply, validintercomplayers, intercom_selected_lang )
               end
               if counter > 0 then
               else
-                net.Start("intercom_overlay_end")
-                net.Send(f)
+                if validintercomplayers5[f] == true then
+                else
+                  validintercomplayers5[f] = true
+                  net.Start("intercom_overlay_end_2")
+                  net.Send(f)
+                end
               end
             end
             validintercomplayers2 = validintercomplayers3

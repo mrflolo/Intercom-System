@@ -1,15 +1,34 @@
+--[=[---------------------------------------------------------------------------------------
+║                                                                                          ║
+║               Copyright (c) 2020 | mr_flolo / mrflolo | All rights reserved              ║
+║                                                                                          ║
+║                           Contact: mrflolo.addons@gmx.de                                 ║
+║                                                                                          ║
+║------------------------------------------------------------------------------------------║
+║                                                                                          ║
+║                                    Intercom System                                       ║
+║                                                                                          ║
+║                     All code and contributors can be seen on GitHub.                     ║
+║                                                                                          ║
+║                        https://github.com/mrflolo/Intercom-System                        ║
+║                                                                                          ║
+║                    I do not own any of the Sounds used in this Addon.                    ║
+║                                                                                          ║
+-----------------------------------------------------------------------------------------]=]
+
+
 hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function()
 
   spawnmenu.AddToolMenuOption( "Utilities", "Intercom Addon-Config", "Intercom_config_allwd_jbs", "Allowed jobs", "", "", function(panel)
 
-    panel:ControlHelp( "Choose jobs that should be allowed to use the intercom")
+    panel:ControlHelp("Choose jobs that should be allowed to use the intercom")
     panel:ControlHelp(" ")
-    panel:ControlHelp( "! Only superadmin / admin can change and see this !")
+    panel:ControlHelp("! Only superadmin / admin can change and see this !")
 
     if !LocalPlayer():IsSuperAdmin() then
       if !LocalPlayer():IsAdmin() then
-        notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
-      else notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
+        notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
+      else notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
       end
     end
 
@@ -22,19 +41,19 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
       elseif h.Name == "Unassigned" then
       else
         local chkbx = panel:CheckBox( h.Name )
-        table.insert( chkbxs, chkbx )
+        table.insert(chkbxs, chkbx)
       end
     end
 
-    panel:ControlHelp(" ")
+    panel:ControlHelp("")
 
-    local Button = panel:Button( "Save" )
+    local Button = panel:Button("Save")
     Button.DoClick = function()
 
       if !LocalPlayer():IsSuperAdmin() then
         if !LocalPlayer():IsAdmin() then
-          notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
-        else notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
+          notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
+        else notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
         end
       end
 
@@ -42,24 +61,24 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
 
       for u, i in pairs(chkbxs) do
         if i:GetChecked() == true then
-          table.insert( trues, i:GetText())
+          table.insert(trues, i:GetText())
         end
       end
 
-      notification.AddLegacy( "Intercom-System: Allowed Jobs Saved", 2, 4 )
+      notification.AddLegacy("Intercom-System: Allowed Jobs Saved", 2, 4)
 
-      net.Start( "ChangeIntercomSaveTeams" )
-      net.WriteTable( trues )
+      net.Start("ChangeIntercomSaveTeams")
+      net.WriteTable(trues)
       net.SendToServer()
 
     end
   end)
 
-  spawnmenu.AddToolMenuOption( "Utilities", "Intercom Addon-Config", "Intercom_config_cnfg", "Zones", "", "",function(panel)
+  spawnmenu.AddToolMenuOption("Utilities", "Intercom Addon-Config", "Intercom_config_cnfg", "Zones", "", "",function(panel)
 
-    panel:ControlHelp( "Manage the Intercom-System zones")
-    panel:ControlHelp(" ")
-    panel:ControlHelp( "! Only superadmin / admin can change and see this !")
+    panel:ControlHelp("Manage the Intercom-System zones")
+    panel:ControlHelp("")
+    panel:ControlHelp("! Only superadmin / admin can change and see this !")
 
     if !LocalPlayer():IsSuperAdmin() then
       if !LocalPlayer():IsAdmin() then
@@ -74,13 +93,13 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
 
     list:SetMultiSelect(false)
 
-    list:AddColumn( "X1", 1 )
-    list:AddColumn( "Y1", 2 )
-    list:AddColumn( "Z1", 3 )
-    list:AddColumn( " | ", 4 )
-    list:AddColumn( "X2", 5 )
-    list:AddColumn( "Y2", 6 )
-    list:AddColumn( "Z2", 7 )
+    list:AddColumn("X1", 1)
+    list:AddColumn("Y1", 2)
+    list:AddColumn("Z1", 3)
+    list:AddColumn("|", 4)
+    list:AddColumn("X2", 5)
+    list:AddColumn("Y2", 6)
+    list:AddColumn("Z2", 7)
 
     local function ReloadZoneMenu()
 
@@ -107,13 +126,13 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
 
     list:SetHeight(250)
 
-    local Button = panel:Button( "show zone" )
+    local Button = panel:Button("show zone")
     Button.DoClick = function()
 
       if !LocalPlayer():IsSuperAdmin() then
         if !LocalPlayer():IsAdmin() then
-          notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
-        else notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
+          notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
+        else notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
         end
       end
 
@@ -133,35 +152,35 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
       local showvector1 = Vector( cord1, cord2, cord3 )
       local showvector2 = Vector( cord4, cord5, cord6 )
 
-      hook.Remove( "HUDPaint", "IntercomShowSingleZone" )
+      hook.Remove("HUDPaint", "IntercomShowSingleZone")
 
-      hook.Add( "HUDPaint", "IntercomShowSingleZone",function()
+      hook.Add("HUDPaint", "IntercomShowSingleZone",function()
         cam.Start3D()
           render.DrawWireframeBox( Vector(0, 0, 0), Angle( 0, 0, 0 ), showvector1, showvector2, Color( 255, 255, 255))
         cam.End3D()
       end)
     end
 
-    local Button = panel:Button( "hide zone" )
+    local Button = panel:Button("hide zone")
     Button.DoClick = function()
 
       if !LocalPlayer():IsSuperAdmin() then
         if !LocalPlayer():IsAdmin() then
-          notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
-        else notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
+          notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
+        else notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
         end
       end
 
-      hook.Remove( "HUDPaint", "IntercomShowSingleZone" )
+      hook.Remove("HUDPaint", "IntercomShowSingleZone")
     end
 
-    local Button = panel:Button( "remove zone" )
+    local Button = panel:Button("remove zone")
     Button.DoClick = function()
 
       if !LocalPlayer():IsSuperAdmin() then
         if !LocalPlayer():IsAdmin() then
-          notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
-        else notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
+          notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
+        else notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
         end
       end
 
@@ -188,7 +207,7 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
       table.insert(SQLSaveTable, cord6)
 
       net.Start("RemoveIntercomZone")
-      net.WriteTable( SQLSaveTable )
+      net.WriteTable(SQLSaveTable)
       net.SendToServer()
 
       ReloadZoneMenu()
@@ -197,7 +216,7 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
     panel:ControlHelp("")
     panel:ControlHelp("")
 
-    local Button = panel:Button( "show all zones" )
+    local Button = panel:Button("show all zones")
     Button.DoClick = function()
 
       if timer.Exists("Intercom_ShowZones_CoolDown") then return end
@@ -206,8 +225,8 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
 
       if !LocalPlayer():IsSuperAdmin() then
         if !LocalPlayer():IsAdmin() then
-          notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
-        else notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
+          notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
+        else notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
         end
       end
 
@@ -220,9 +239,9 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
         IntercomZoneCords = net.ReadTable()
       end)
 
-      notification.AddLegacy( "Intercom-System: zones shown", 3, 4 )
+      notification.AddLegacy("Intercom-System: zones shown", 3, 4)
 
-      hook.Add( "HUDPaint", "IntercomShowAllZones",function()
+      hook.Add("HUDPaint", "IntercomShowAllZones",function()
         cam.Start3D()
           for f, g in pairs(IntercomZoneCords) do
             local IntercomShowVector1 = Vector( g[1].cord1_x, g[2].cord1_y, g[3].cord1_z )
@@ -234,25 +253,25 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
       end)
     end
 
-    local Button = panel:Button( "hide all zones" )
+    local Button = panel:Button("hide all zones")
     Button.DoClick = function()
 
       if !LocalPlayer():IsSuperAdmin() then
         if !LocalPlayer():IsAdmin() then
-          notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
-        else notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
+          notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
+        else notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
         end
       end
 
-      notification.AddLegacy( "Intercom-System: zones hidden", 1, 4 )
+      notification.AddLegacy("Intercom-System: zones hidden", 1, 4)
 
-      hook.Remove( "HUDPaint", "IntercomShowAllZones" )
-      hook.Remove( "HUDPaint", "IntercomShowSingleZone" )
+      hook.Remove("HUDPaint", "IntercomShowAllZones")
+      hook.Remove("HUDPaint", "IntercomShowSingleZone")
 
     end
 
-    panel:ControlHelp(" ")
-    panel:ControlHelp(" ")
+    panel:ControlHelp("")
+    panel:ControlHelp("")
 
     local button2 = vgui.Create("DButton")
     local TextEntry1 = vgui.Create("DTextEntry")
@@ -270,15 +289,15 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
 
       if !LocalPlayer():IsSuperAdmin() then
         if !LocalPlayer():IsAdmin() then
-          notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
-        else notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
+          notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
+        else notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
         end
       end
 
       Intercom_Zone_pos_1 = LocalPlayer():GetPos()
       TextEntry1:SetValue(tostring(Intercom_Zone_pos_1))
 
-      hook.Add( "HUDPaint", "IntercomCustomDrawBeams1",function()
+      hook.Add("HUDPaint", "IntercomCustomDrawBeams1",function()
         cam.Start3D()
         render.SetMaterial(Material("cable/redlaser"))
           render.DrawBeam(Intercom_Zone_pos_1 - Vector(0,0,100000), Intercom_Zone_pos_1 + Vector(0,0,100000), 50, 1, 1, Color( 200, 200, 255, 250))
@@ -287,23 +306,23 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
     end
 
     panel:Help("Max-Pos")
-    panel:AddItem( TextEntry2 )
-    panel:AddItem( button3 )
+    panel:AddItem(TextEntry2)
+    panel:AddItem(button3)
     button3:SetText("GetPos")
-    button3:SetPos( ScrW()/11, 0 )
+    button3:SetPos(ScrW()/11, 0)
     button3.DoClick = function()
 
       if !LocalPlayer():IsSuperAdmin() then
         if !LocalPlayer():IsAdmin() then
-          notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
-        else notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
+          notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
+        else notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
         end
       end
 
       Intercom_Zone_pos_2 = LocalPlayer():GetPos()
       TextEntry2:SetValue(tostring(Intercom_Zone_pos_2))
 
-      hook.Add( "HUDPaint", "IntercomCustomDrawBeams2",function()
+      hook.Add("HUDPaint", "IntercomCustomDrawBeams2",function()
         cam.Start3D()
         render.SetMaterial(Material("cable/redlaser"))
           render.DrawBeam(Intercom_Zone_pos_2 - Vector(0,0,100000), Intercom_Zone_pos_2 + Vector(0,0,100000), 50, 1, 1, Color( 200, 200, 255, 250))
@@ -311,16 +330,16 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
       end)
     end
 
-    panel:ControlHelp(" ")
-    panel:ControlHelp(" ")
+    panel:ControlHelp("")
+    panel:ControlHelp("")
 
     local button4 = panel:Button("Add Zone")
     button4.DoClick = function()
 
       if !LocalPlayer():IsSuperAdmin() then
         if !LocalPlayer():IsAdmin() then
-          notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
-        else notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
+          notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
+        else notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
         end
       end
 
@@ -345,11 +364,11 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
 
       if table.Count(ents.FindInBox(Intercom_Zone_pos_1_1, Intercom_Zone_pos_2_1)) > IntercomZonesEntLimit then
 
-        notification.AddLegacy( "Intercom-System: Too many entitys in the zone, make it smaller!", 10, 1 )
+        notification.AddLegacy("Intercom-System: Too many entitys in the zone, make it smaller!", 10, 1)
 
       else
 
-        hook.Add( "HUDPaint", "IntercomShowSingleZone",function()
+        hook.Add("HUDPaint", "IntercomShowSingleZone",function()
           cam.Start3D()
             render.DrawWireframeBox( Vector(0, 0, 0),Angle( 0, 0, 0 ), Intercom_Zone_pos_2_1, Intercom_Zone_pos_1_1, Color( 255, 255, 255))
           cam.End3D()
@@ -363,7 +382,7 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
 
         ReloadZoneMenu()
 
-        timer.Create( "IntercomZoneRemoveBeaconCubeTimer", 10, 1, function()
+        timer.Create("IntercomZoneRemoveBeaconCubeTimer", 10, 1, function()
 
           hook.Remove("HUDPaint", "IntercomShowSingleZone")
 
@@ -372,25 +391,25 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
     end
   end)
 
-  spawnmenu.AddToolMenuOption( "Utilities", "Intercom Addon-Config", "Intercom_config_lang", "Language", "", "",function(panel)
+  spawnmenu.AddToolMenuOption("Utilities", "Intercom Addon-Config", "Intercom_config_lang", "Language", "", "",function(panel)
 
-    panel:ControlHelp( "Change the Intercom-System language")
-    panel:ControlHelp(" ")
-    panel:ControlHelp( "! Only superadmin / admin can change and see this !")
+    panel:ControlHelp("Change the Intercom-System language")
+    panel:ControlHelp("")
+    panel:ControlHelp("! Only superadmin / admin can change and see this !")
 
     if !LocalPlayer():IsSuperAdmin() then
       if !LocalPlayer():IsAdmin() then
-        notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
-      else notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
+        notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
+      else notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
       end
     end
 
     local lang = {}
 
-    local lang_chkbx1 = panel:CheckBox( "ENG" )
-    local lang_chkbx2 = panel:CheckBox( "GER" )
-    local lang_chkbx3 = panel:CheckBox( "FR" )
-    local lang_chkbx4 = panel:CheckBox( "POL" )
+    local lang_chkbx1 = panel:CheckBox("ENG")
+    local lang_chkbx2 = panel:CheckBox("GER")
+    local lang_chkbx3 = panel:CheckBox("FR")
+    local lang_chkbx4 = panel:CheckBox("POL")
     function lang_chkbx1:OnChange( val )
       if val then
         lang_chkbx2:SetValue(0)
@@ -420,15 +439,15 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
       end
     end
 
-    panel:ControlHelp(" ")
+    panel:ControlHelp("")
 
-    local Button = panel:Button( "Save" )
+    local Button = panel:Button("Save")
     Button.DoClick = function()
 
       if !LocalPlayer():IsSuperAdmin() then
         if !LocalPlayer():IsAdmin() then
-          notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
-        else notification.AddLegacy( "Intercom-System: acces denied", 1, 8 ) return
+          notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
+        else notification.AddLegacy("Intercom-System: acces denied", 1, 8) return
         end
       end
 
@@ -444,10 +463,10 @@ hook.Add( "PopulateToolMenu", "mr_flolo_config_tool_populate_intercom", function
         table.insert( lang, lang_chkbx4:GetText())
       end
 
-      notification.AddLegacy( "Intercom-System: Language Saved", 2, 4 )
+      notification.AddLegacy("Intercom-System: Language Saved", 2, 4)
 
-      net.Start( "ChangeIntercomSaveLang" )
-      net.WriteTable( lang )
+      net.Start("ChangeIntercomSaveLang")
+      net.WriteTable(lang)
       net.SendToServer()
     end
   end)
