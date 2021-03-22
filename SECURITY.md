@@ -16,7 +16,7 @@
 I can be contacted on these ways:
 |Contact-Option| |
 |--------------|-|
-|E-Mail        |mrflolo.addon@gmx.de|
+|E-Mail        |mrflolo03@gmail.com|
 |Steam         |www.steamcommunity.com/id/mrflolo/
 |Discord       |mr_flolo#0654|
 |Twitter       |www.twitter.com/NoahSK4|
